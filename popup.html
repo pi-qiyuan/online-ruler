@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="windowTitle">屏幕尺子 - 1:1 精确测量</title>
+  <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+  <div class="actions-group">
+    <button id="openRuler" data-i18n="openRuler">打开独立尺子窗口</button>
+    <button id="addOverlayRuler" data-i18n="addOverlayRuler">在当前页添加尺子</button>
+    <button id="openCalibration" data-i18n="openCalibration">进入校准模式</button>
+  </div>
+  
+  <div class="settings-group">
+    <div class="setting-item">
+      <div class="setting-label-row">
+        <label data-i18n="zeroOffsetLabel">零点偏移 (mm): </label>
+        <span id="zeroOffsetVal">0</span>
+        <button id="resetZero" class="mini-btn" data-i18n="resetZero">归零</button>
+      </div>
+      <div class="slider-wrapper">
+        <input type="range" id="zeroOffsetSlider" min="-50" max="50" value="0" step="1" list="tickmarks">
+        <datalist id="tickmarks">
+          <option value="-50"></option>
+          <option value="0"></option>
+          <option value="50"></option>
+        </datalist>
+        <div class="slider-ticks">
+          <span>-50</span>
+          <span class="zero-tick">0</span>
+          <span>50</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="ppiStatus">当前 PPI: 96 (默认)</div>
+
+  <div class="footer">
+    <a href="https://hugbear.ai/" target="_blank" data-i18n="more_tools"></a>
+    <span class="divider">|</span>
+    <a href="https://ko-fi.com/qiyuanyang" target="_blank" data-i18n="buy_coffee"></a>
+  </div>
+
+  <script src="js/popup.js"></script>
+</body>
+</html>

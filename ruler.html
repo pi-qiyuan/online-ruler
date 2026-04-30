@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="windowTitle">屏幕尺子 - 1:1 精确测量</title>
+  <link rel="stylesheet" href="css/ruler.css">
+</head>
+<body>
+  <div id="toolbar">
+    <div class="group">
+      <select id="unitSelect">
+        <option value="cm" data-i18n="unitCm">CM / MM</option>
+        <option value="in" data-i18n="unitIn">Inch</option>
+      </select>
+      <button id="toggleDir" data-i18n-title="toggleDir">↔/↕</button>
+    </div>
+    <div class="group">
+      <button id="settingsBtn" data-i18n="settings">⚙️ 校准</button>
+    </div>
+  </div>
+
+  <div id="rulerContainer" class="horizontal">
+    <svg id="rulerSvg" width="100%" height="100%"></svg>
+  </div>
+
+  <!-- 校准模态框 -->
+  <div id="calibrationModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 data-i18n="calibrationTitle">1:1 物理尺寸校准</h3>
+      <div class="step">
+        <span data-i18n="step1">1. 请选择参考物:</span>
+        <select id="refObject">
+          <option value="card" data-w="85.6" data-h="53.98" data-i18n="refCard">信用卡 (85.6mm)</option>
+          <option value="a4" data-w="210" data-h="297" data-i18n="refA4">A4 纸宽度 (210mm)</option>
+          <option value="coin" data-w="25" data-h="25" data-i18n="refCoin">一元硬币 (25mm)</option>
+        </select>
+      </div>
+      <div class="step">
+        <span data-i18n="step2">2. 将实物贴在屏幕上，调整红色框至重合:</span>
+        <div class="slider-row">
+          <input type="range" id="ppiSlider" min="50" max="600" value="96">
+          <div class="ppi-controls">
+            <button id="ppiMinus" class="ppi-btn">-</button>
+            <div class="ppi-display">
+              <span data-i18n="currentPpiLabel">当前 PPI: </span><span id="currentPpi">96</span>
+            </div>
+            <button id="ppiPlus" class="ppi-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div id="calibrationBoxContainer">
+        <div id="calibrationBox"></div>
+      </div>
+      <div class="actions">
+        <button id="saveCalibration" data-i18n="saveAndStart">保存校准并开始测量</button>
+        <button id="closeModal" data-i18n="cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/ruler.js"></script>
+</body>
+</html>
