@@ -43,6 +43,9 @@ Whether you are a designer, an engineer, or simply a user who needs to measure s
 
     All calibration data (PPI, unit preferences, offsets) is stored exclusively within your local browser; absolutely no data is uploaded to external servers.
 
+### Installation
+[Download on Chrome Web Store](https://chromewebstore.google.com/detail/online-ruler/hdflbmnojjkedghfaioipcbjiainnpnn)
+
 ## 📖 Instructions
 
 1. First-time Use: Click the extension icon to enter "Calibration Mode."
