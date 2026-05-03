@@ -8,6 +8,18 @@ Do you often struggle to obtain accurate measurements when sizing objects on you
 
 Whether you are a designer, an engineer, or simply a user who needs to measure small objects on your screen, this extension offers you the most intuitive and reliable digital measurement solution available.
 
+## 🎉 NEW IN v1.1.0: 360° ARBITRARY ROTATION
+
+Break free from the constraints of horizontal and vertical measurements. You can now rotate your ruler to any angle to match any object on your screen:
+
+* ✨ **Smooth Rotation Handle**: Simply drag the new rotation handle at the end of the ruler (in Overlay Mode) to adjust its angle with fluid, real-time feedback.
+
+* ✨ **Precision Snapping**: Effortlessly lock onto key angles like 45°, 90°, and 180° with built-in snapping logic and one-click presets for rapid switching.
+
+* ✨ **Visual Angle Badge**: A dynamic tooltip displays your exact rotation degree in real-time, ensuring professional-grade measurement precision.
+
+* ✨ **Full Consistency**: The realistic wood grain, scale markings, and interactive toolbar all maintain their structural integrity and clarity at any orientation.
+
 ## 🌟 Core Features
 * ✨ **Physical-Level Calibration**:
 
