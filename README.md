@@ -8,17 +8,18 @@ Do you often struggle to obtain accurate measurements when sizing objects on you
 
 Whether you are a designer, an engineer, or simply a user who needs to measure small objects on your screen, this extension offers you the most intuitive and reliable digital measurement solution available.
 
-## 🎉 NEW IN v1.1.0: 360° ARBITRARY ROTATION
+## 🎉 NEW IN v1.2.0: MULTIPLE RULERS & NEW MATERIALS
 
-Break free from the constraints of horizontal and vertical measurements. You can now rotate your ruler to any angle to match any object on your screen:
+This update brings more powerful multi-dimensional measurement capabilities and personalized visual options:
 
-* ✨ **Smooth Rotation Handle**: Simply drag the new rotation handle at the end of the ruler (in Overlay Mode) to adjust its angle with fluid, real-time feedback.
+* ✨ **Multiple Rulers**: Support for adding multiple rulers on the same page to meet complex comparative measurement needs.
 
-* ✨ **Precision Snapping**: Effortlessly lock onto key angles like 45°, 90°, and 180° with built-in snapping logic and one-click presets for rapid switching.
+* ✨ **Plastic & Metal Materials**:
+    - Plastic: Offers a variety of fresh, selectable colors for a more vibrant interface.
+    - Metal: Realistic brushed metal texture for a professional, tech-forward aesthetic.
 
-* ✨ **Visual Angle Badge**: A dynamic tooltip displays your exact rotation degree in real-time, ensuring professional-grade measurement precision.
+* ✨ **Material Color Customization**: Plastic material now supports switching between multiple color schemes to suit different backgrounds and personal preferences.
 
-* ✨ **Full Consistency**: The realistic wood grain, scale markings, and interactive toolbar all maintain their structural integrity and clarity at any orientation.
 
 ## 🌟 Core Features
 * ✨ **Physical-Level Calibration**:
@@ -31,13 +32,17 @@ Break free from the constraints of horizontal and vertical measurements. You can
 
     Page Overlay Mode: Displays a floating ruler directly over any webpage; supports transparency adjustments to ensure it does not interfere with your reading experience.
 
+* 🔄 **360° Arbitrary Rotation**:
+
+    Break free from horizontal and vertical constraints. Use the rotation handle to adjust the angle in real-time. Supports snapping to key angles (45°/90°) and displays a real-time angle badge.
+
 * 🔄 **Zero Offset & Reset**:
 
     Mimics the protective "zero-point" edge found on physical rulers, allowing you to set a custom starting offset (in mm). Includes a one-click "Reset to Zero" function to quickly restore the measurement baseline.
 
-* 🪵 **Realistic Wood Grain Aesthetics**:
+* 🪵 **Realistic Multi-Material Aesthetics**:
 
-    Features a ruler body with a realistic wood grain texture generated via dynamic SVG filters, balancing a professional look with visual comfort, while ensuring the measurement markings remain crisp and sharp.
+    Features ruler bodies in Wood, Plastic, or Metal textures. Generated via dynamic SVG filters, balancing a professional look with visual comfort while ensuring crisp markings.
 
 * 📏 **Comprehensive Scale Support**:
 

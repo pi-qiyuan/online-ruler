@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 横向木纹 -->
+    <filter id="woodFilterH">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6 0.005" numOctaves="5" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0"/>
+    </filter>
+    <!-- 纵向木纹 -->
+    <filter id="woodFilterV">
+      <feTurbulence type="fractalNoise" baseFrequency="0.005 0.6" numOctaves="5" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0"/>
+    </filter>
+    <!-- 塑料质感 -->
+    <filter id="plasticFilter">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
+      <feSpecularLighting in="blur" surfaceScale="5" specularConstant=".75" specularExponent="20" lighting-color="#bbbbbb" result="specOut">
+        <fePointLight x="-5000" y="-10000" z="20000"/>
+      </feSpecularLighting>
+      <feComposite in="specOut" in2="SourceGraphic" operator="in" result="specOut"/>
+      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+    </filter>
+    <!-- 金属质感 (横向) -->
+    <filter id="metalFilterH">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5 0.005" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0" result="noise2"/>
+      <feSpecularLighting in="noise2" surfaceScale="2" specularConstant="1.2" specularExponent="30" lighting-color="#ffffff" result="specOut">
+        <fePointLight x="-5000" y="-10000" z="20000"/>
+      </feSpecularLighting>
+      <feComposite in="specOut" in2="SourceGraphic" operator="in" result="specOut2"/>
+      <feComposite in="SourceGraphic" in2="specOut2" operator="arithmetic" k1="0" k2="1" k3="0.5" k4="0"/>
+    </filter>
+    <!-- 金属质感 (纵向) -->
+    <filter id="metalFilterV">
+      <feTurbulence type="fractalNoise" baseFrequency="0.005 0.5" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.15 0" result="noise2"/>
+      <feSpecularLighting in="noise2" surfaceScale="2" specularConstant="1.2" specularExponent="30" lighting-color="#ffffff" result="specOut">
+        <fePointLight x="-5000" y="-10000" z="20000"/>
+      </feSpecularLighting>
+      <feComposite in="specOut" in2="SourceGraphic" operator="in" result="specOut2"/>
+      <feComposite in="SourceGraphic" in2="specOut2" operator="arithmetic" k1="0" k2="1" k3="0.5" k4="0"/>
+    </filter>
+  </defs>
+</svg>

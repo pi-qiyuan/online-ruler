@@ -12,6 +12,14 @@
         <option value="cm" data-i18n="unitCm">CM / MM</option>
         <option value="in" data-i18n="unitIn">Inch</option>
       </select>
+      <select id="materialSelect">
+        <option value="WOOD" data-i18n="matWood">木质</option>
+        <option value="PLASTIC" data-i18n="matPlastic">塑料</option>
+        <option value="METAL" data-i18n="matMetal">金属</option>
+      </select>
+      <!-- 自定义颜色选择器容器 -->
+      <div id="customColorSelector" style="display: none;"></div>
+      
       <button id="toggleDir" data-i18n-title="toggleDir">↔/↕</button>
     </div>
     <div class="group">
@@ -59,6 +67,7 @@
   </div>
 
   <script src="js/shared.js"></script>
+  <script src="js/engine.js"></script>
   <script src="js/ruler.js"></script>
 </body>
 </html>

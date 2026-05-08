@@ -1,4 +1,5 @@
 SharedLogic.initI18n();
+SharedLogic.Milestones.updateStats('totalOpens');
 
 const state = { ppi: 96, zeroOffset: 0 };
 const zSlider = document.getElementById('zeroOffsetSlider');
@@ -10,17 +11,35 @@ SharedLogic.bindState(state, () => {
   zVal.innerText = state.zeroOffset;
 });
 
-document.getElementById('openRuler').onclick = () => chrome.windows.create({ url: 'ruler.html', type: 'popup', width: 800, height: 200 });
+document.getElementById('openRuler').onclick = () => {
+  chrome.windows.create({ url: 'ruler.html', type: 'popup', width: 800, height: 200 });
+};
+
 document.getElementById('openCalibration').onclick = () => chrome.tabs.create({ url: 'ruler.html?calibrate=true' });
+
 document.getElementById('addOverlayRuler').onclick = async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab) {
     try {
-      await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['js/shared.js', 'js/overlay.js'] });
+      // 注入 CSS
+      await chrome.scripting.insertCSS({
+        target: { tabId: tab.id },
+        files: ['css/overlay.css']
+      });
+      // 注入 JS
+      await chrome.scripting.executeScript({ 
+        target: { tabId: tab.id }, 
+        files: ['js/shared.js', 'js/engine.js', 'js/overlay.js'] 
+      });
+      SharedLogic.Milestones.updateStats('overlayInjections');
     } catch (e) {
       alert(chrome.i18n.getMessage('unsupportedPage'));
     }
   }
+};
+
+zSlider.onchange = () => {
+  SharedLogic.Milestones.updateStats('zeroOffsetChanges');
 };
 
 zSlider.oninput = (e) => {
@@ -32,4 +51,5 @@ document.getElementById('resetZero').onclick = () => {
   zSlider.value = 0;
   zVal.innerText = 0;
   chrome.storage.local.set({ zeroOffset: 0 });
+  SharedLogic.Milestones.updateStats('zeroOffsetChanges');
 };

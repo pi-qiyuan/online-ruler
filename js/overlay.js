@@ -1,164 +1,297 @@
 (function() {
-  if (document.getElementById('online-ruler-overlay')) return;
-
-  let state = { ppi: 96, unit: 'cm', zeroOffset: 0, angle: 0 };
-  let isVertical = false, hW = 600, vH = 600;
-  let pivotX = 100, pivotY = 100; // 记录旋转中心（左上角）在视口中的位置
-
-  const styles = `
-    #online-ruler-overlay { position: fixed; top: 100px; left: 100px; z-index: 1000000; cursor: move; user-select: none; display: flex; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border-radius: 6px; transform-origin: 0 0; will-change: transform, left, top; }
-    .ruler-body { position: relative; background-color: ${SharedLogic.CONSTANTS.WOOD_BASE_COLOR}; overflow: visible; flex-shrink: 0; }
-    .ruler-svg { width: 100%; height: 100%; display: block; position: absolute; top: 0; left: 0; pointer-events: none; }
-    
-    .resize-handle { position: absolute; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); z-index: 10; opacity: 0; transition: opacity 0.2s; }
-    .ruler-body:hover .resize-handle { opacity: 1; }
-    .resize-handle div { border: 2px solid rgba(0,0,0,0.5); }
-    
-    .rotate-handle { position: absolute; width: 24px; height: 24px; background: #fff; border: 2px solid #333; border-radius: 50%; right: -35px; top: 50%; margin-top: -12px; cursor: crosshair; z-index: 20; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.2s; }
-    .ruler-body:hover .rotate-handle, .rotate-handle.active { opacity: 0.8; }
-    .rotate-handle::after { content: '↻'; font-size: 14px; color: #333; font-weight: bold; }
-
-    .angle-badge { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 12px; pointer-events: none; display: none; white-space: nowrap; z-index: 100; }
-    
-    .ruler-toolbar { background: #333; display: flex; gap: 8px; cursor: default; box-sizing: border-box; color: white; }
-    .ruler-toolbar select, .ruler-toolbar button { font-size: 11px; padding: 2px 5px; background: #444; color: white; border: 1px solid #555; border-radius: 3px; cursor: pointer; }
-    .angle-presets { display: flex; gap: 4px; border-left: 1px solid #555; padding-left: 8px; margin-left: 4px; }
-  `;
-  const styleSheet = document.createElement("style"); styleSheet.innerText = styles; document.head.appendChild(styleSheet);
-
-  const container = document.createElement('div'); container.id = 'online-ruler-overlay';
-  const rulerBody = document.createElement('div'); rulerBody.className = 'ruler-body';
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.className = 'ruler-svg';
-  const resizeHandle = document.createElement('div'); resizeHandle.className = 'resize-handle';
-  const resizeIcon = document.createElement('div'); resizeHandle.appendChild(resizeIcon);
-  const rotateHandle = document.createElement('div'); rotateHandle.className = 'rotate-handle';
-  const angleBadge = document.createElement('div'); angleBadge.className = 'angle-badge';
-  const toolbar = document.createElement('div'); toolbar.className = 'ruler-toolbar';
-
-  rulerBody.append(svg, resizeHandle, rotateHandle, angleBadge);
-  container.append(rulerBody, toolbar);
-
-  const unitSelect = document.createElement('select');
-  [['cm', 'unitCm', 'CM/MM'], ['in', 'unitIn', 'Inch']].forEach(([v, k, d]) => {
-    const o = document.createElement('option'); o.value = v; o.innerText = chrome.i18n.getMessage(k) || d; unitSelect.appendChild(o);
-  });
-
-  const opacityInput = document.createElement('input'); opacityInput.type = 'range'; opacityInput.min = '30'; opacityInput.max = '100'; opacityInput.value = '100';
-  opacityInput.oninput = (e) => container.style.opacity = e.target.value / 100;
-
-  const closeBtn = document.createElement('button'); closeBtn.innerText = '✕';
-  closeBtn.style.cssText = "background: none; border: none; color: #aaa; font-size: 14px;";
-  closeBtn.onclick = () => { container.remove(); styleSheet.remove(); };
-
-  function updateRulerContent() {
-    SharedLogic.drawRuler(svg, { width: isVertical?60:hW, height: isVertical?vH:60, isVertical, unit: state.unit, physicalPpi: state.ppi, zeroOffset: state.zeroOffset });
+  // 避免重复定义类
+  if (window.OnlineRulerInstance) {
+    new window.OnlineRulerInstance();
+    return;
   }
 
-  function updateRulerTransform() {
-    container.style.transform = `rotate(${state.angle}deg)`;
-    angleBadge.innerText = `${parseFloat(state.angle).toFixed(1)}°`;
-  }
-
-  function createAnglePresets() {
-    const group = document.createElement('div'); group.className = 'angle-presets';
-    [0, 45, 90].forEach(deg => {
-      const btn = document.createElement('button'); btn.innerText = deg + '°';
-      btn.onclick = (e) => { e.stopPropagation(); state.angle = deg; chrome.storage.local.set({ angle: deg }); updateRulerTransform(); };
-      group.appendChild(btn);
-    });
-    return group;
-  }
-
-  function updateLayout() {
-    const curL = container.style.left;
-    const curT = container.style.top;
-    
-    [container, rulerBody, resizeHandle, resizeIcon, toolbar, opacityInput].forEach(el => el.style.cssText = '');
-    Object.assign(container.style, { position: 'fixed', zIndex: '1000000', boxShadow: '0 10px 40px rgba(0,0,0,0.4)', borderRadius: '6px', transformOrigin: '0 0', left: curL || '100px', top: curT || '100px' });
-    
-    toolbar.innerHTML = '';
-    const presets = createAnglePresets();
-
-    if (!isVertical) {
-      Object.assign(container.style, { width: hW + 'px', height: '95px', flexDirection: 'column', minWidth: '320px' });
-      Object.assign(rulerBody.style, { width: '100%', height: '60px', backgroundImage: SharedLogic.CONSTANTS.TEXTURES.HORIZONTAL, borderRadius: '6px 6px 0 0' });
-      Object.assign(resizeHandle.style, { width: '16px', height: '60px', right: '0', top: '0', cursor: 'ew-resize', borderLeft: '1px solid rgba(0,0,0,0.2)' });
-      Object.assign(resizeIcon.style, { width: '4px', height: '25px', borderLeft: '2px solid rgba(0,0,0,0.6)', borderRight: '2px solid rgba(0,0,0,0.6)' });
-      Object.assign(toolbar.style, { width: '100%', height: '35px', flexDirection: 'row', borderRadius: '0 0 6px 6px', padding: '0 10px', justifyContent: 'space-between', alignItems: 'center', display: 'flex' });
-      Object.assign(rotateHandle.style, { right: '-35px', top: '30px' });
-      opacityInput.style.width = '60px';
-      const L = document.createElement('div'); L.style.cssText = 'display:flex;gap:8px;align-items:center;'; L.append(unitSelect, presets);
-      const R = document.createElement('div'); R.style.cssText = 'display:flex;gap:8px;align-items:center;'; R.append(opacityInput, closeBtn);
-      toolbar.append(L, R); 
-    } else {
-      Object.assign(container.style, { width: '200px', height: vH + 'px', flexDirection: 'row', minHeight: '320px' });
-      Object.assign(rulerBody.style, { width: '60px', height: '100%', backgroundImage: SharedLogic.CONSTANTS.TEXTURES.VERTICAL, borderRadius: '6px 0 0 6px' });
-      Object.assign(resizeHandle.style, { width: '60px', height: '16px', bottom: '0', left: '0', cursor: 'ns-resize', borderTop: '1px solid rgba(0,0,0,0.2)' });
-      Object.assign(resizeIcon.style, { width: '25px', height: '4px', borderTop: '2px solid rgba(0,0,0,0.6)', borderBottom: '2px solid rgba(0,0,0,0.6)' });
-      Object.assign(toolbar.style, { width: '140px', height: '100%', flexDirection: 'column', borderRadius: '0 6px 6px 0', padding: '10px', gap: '10px', display: 'flex' });
-      Object.assign(rotateHandle.style, { bottom: '-35px', left: '30px' });
-      const T = document.createElement('div'); T.style.textAlign = 'right'; T.append(closeBtn);
-      const P = document.createElement('div'); P.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;justify-content:center;'; P.append(...presets.childNodes);
-      const O = document.createElement('div'); O.style.cssText = "margin-top: auto; padding-bottom: 10px; display: flex; justify-content: center;";
-      opacityInput.style.cssText = "height: 60px; width: 20px; writing-mode: vertical-lr; direction: rtl;";
-      O.append(opacityInput); toolbar.append(T, unitSelect, P, O);
+  class OnlineRulerInstance {
+    constructor() {
+      this.state = { ppi: 96, unit: 'cm', zeroOffset: 0, angle: 0, material: 'WOOD' };
+      this.isVertical = false;
+      this.hW = 600;
+      this.vH = 600;
+      this.pivotX = 100;
+      this.pivotY = 100;
+      this.mode = '';
+      
+      this.initElements();
+      this.initEvents();
+      this.loadInitialState();
+      
+      // 加载材质库
+      MeasurementEngine.loadMaterials();
+      
+      document.body.appendChild(this.container);
+      this.updateLayout();
     }
-    updateRulerContent();
-    updateRulerTransform();
-  }
 
-  SharedLogic.bindState(state, (init) => { 
-    if(init) unitSelect.value = state.unit; 
-    updateRulerContent(); 
-    updateRulerTransform();
-  });
+    initElements() {
+      window.OnlineRulerInstance.count = (window.OnlineRulerInstance.count || 0) + 1;
+      const offset = (window.OnlineRulerInstance.count - 1) * 30;
+      
+      this.container = document.createElement('div');
+      this.container.className = 'online-ruler-overlay';
+      this.container.style.left = (100 + offset) + 'px';
+      this.container.style.top = (100 + offset) + 'px';
+      
+      this.rulerBody = document.createElement('div');
+      this.rulerBody.className = 'ruler-body';
+      
+      this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      this.svg.setAttribute('class', 'ruler-svg');
+      
+      this.resizeHandle = document.createElement('div');
+      this.resizeHandle.className = 'resize-handle';
+      this.resizeIcon = document.createElement('div');
+      this.resizeIcon.className = 'resize-icon';
+      this.resizeHandle.appendChild(this.resizeIcon);
+      
+      this.rotateHandle = document.createElement('div');
+      this.rotateHandle.className = 'rotate-handle';
+      
+      this.angleBadge = document.createElement('div');
+      this.angleBadge.className = 'angle-badge';
+      
+      this.toolbar = document.createElement('div');
+      this.toolbar.className = 'ruler-toolbar';
 
-  unitSelect.onchange = (e) => chrome.storage.local.set({ unit: e.target.value });
+      this.rulerBody.append(this.svg, this.resizeHandle, this.rotateHandle, this.angleBadge);
+      this.container.append(this.rulerBody, this.toolbar);
 
-  let mode = '', sX, sY, iL, iT, iW, iH;
-  container.onmousedown = (e) => {
-    if (e.target.closest('select, input, button')) return;
-    sX = e.clientX; sY = e.clientY;
-    if (e.target === rotateHandle) { 
-      mode = 'rotate'; 
-      pivotX = parseInt(container.style.left) || 100;
-      pivotY = parseInt(container.style.top) || 100;
-      rotateHandle.classList.add('active'); angleBadge.style.display = 'block';
-    } else if (e.target.closest('.resize-handle')) { 
-      mode = 'resize'; iW = container.offsetWidth; iH = container.offsetHeight; 
-    } else { 
-      mode = 'drag'; iL = container.offsetLeft; iT = container.offsetTop; 
-    }
-    e.preventDefault();
-  };
-
-  window.addEventListener('mousemove', (e) => {
-    if (!mode) return;
-    if (mode === 'drag') {
-      container.style.left = (iL + e.clientX - sX) + 'px';
-      container.style.top = (iT + e.clientY - sY) + 'px';
-    } else if (mode === 'resize') {
-      if (!isVertical) { hW = Math.max(320, iW + e.clientX - sX); container.style.width = hW + 'px'; updateRulerContent(); }
-      else { vH = Math.max(320, iH + e.clientY - sY); container.style.height = vH + 'px'; updateRulerContent(); }
-    } else if (mode === 'rotate') {
-      const angle = Math.atan2(e.clientY - pivotY, e.clientX - pivotX) * 180 / Math.PI;
-      let finalAngle = isVertical ? angle - 90 : angle;
-      [0, 45, 90, 135, 180, -45, -90, -135, -180].forEach(snap => {
-        if (Math.abs(finalAngle - snap) < 2) finalAngle = snap;
+      this.unitSelect = document.createElement('select');
+      SharedLogic.CONSTANTS.UNITS.forEach(([v, k, d]) => {
+        const o = document.createElement('option'); o.value = v; o.innerText = chrome.i18n.getMessage(k) || d; this.unitSelect.appendChild(o);
       });
-      state.angle = finalAngle;
-      updateRulerTransform();
-    }
-  });
 
-  window.addEventListener('mouseup', () => { 
-    if (mode === 'rotate') {
-      chrome.storage.local.set({ angle: state.angle });
-      rotateHandle.classList.remove('active');
-      setTimeout(() => { if(!mode) angleBadge.style.display = 'none'; }, 1000);
-    }
-    mode = ''; 
-  });
+      this.materialSelect = document.createElement('select');
+      SharedLogic.CONSTANTS.MATERIALS.forEach(([v, k, d]) => {
+        const o = document.createElement('option'); o.value = v; o.innerText = chrome.i18n.getMessage(k) || d; this.materialSelect.appendChild(o);
+      });
 
-  document.body.appendChild(container); updateLayout();
+      // --- 自定义颜色选择器 ---
+      this.currentColorIdx = 0;
+      this.colorSelector = document.createElement('div');
+      
+      this.colorHelper = SharedLogic.UI.setupColorSelector(this.colorSelector, this, () => {
+        this.updateRulerContent();
+      });
+      // --- End 自定义选择器 ---
+
+      this.opacityInput = document.createElement('input');
+      this.opacityInput.className = 'opacity-slider';
+      this.opacityInput.type = 'range'; this.opacityInput.min = '30'; this.opacityInput.max = '100'; this.opacityInput.value = '100';
+      this.opacityInput.oninput = (e) => this.container.style.opacity = e.target.value / 100;
+
+      this.closeBtn = document.createElement('button');
+      this.closeBtn.className = 'close-btn';
+      this.closeBtn.innerText = '✕';
+      this.closeBtn.onclick = () => {
+        this.container.remove();
+        window.OnlineRulerInstance.count--;
+      };
+
+      // 点击外部关闭列表
+      window.addEventListener('mousedown', () => { if(this.colorOptionsList) this.colorOptionsList.style.display = 'none'; });
+    }
+
+    loadInitialState() {
+      SharedLogic.bindState(this.state, (init) => { 
+        if(init) {
+          this.unitSelect.value = this.state.unit; 
+          this.materialSelect.value = this.state.material;
+          this.updateLayout();
+        }
+        this.updateRulerContent(); 
+        this.updateRulerTransform();
+      });
+    }
+
+    updateRulerContent() {
+      MeasurementEngine.drawRuler(this.svg, { 
+        width: this.isVertical ? 60 : this.hW, 
+        height: this.isVertical ? this.vH : 60, 
+        isVertical: this.isVertical, 
+        unit: this.state.unit, 
+        physicalPpi: this.state.ppi, 
+        zeroOffset: this.state.zeroOffset,
+        material: this.state.material,
+        color: this.state.material === 'PLASTIC' ? SharedLogic.COLORS[this.currentColorIdx].val : null
+      });
+    }
+
+    updateRulerTransform() {
+      this.container.style.transform = `rotate(${this.state.angle}deg)`;
+      this.angleBadge.innerText = `${parseFloat(this.state.angle).toFixed(1)}°`;
+    }
+
+    createAnglePresets() {
+      const group = document.createElement('div');
+      group.className = 'angle-presets';
+      [0, 45, 90].forEach(deg => {
+        const btn = document.createElement('button'); btn.innerText = deg + '°';
+        btn.onclick = (e) => { 
+          e.stopPropagation(); 
+          this.state.angle = deg; 
+          this.updateRulerTransform();
+        };
+        group.appendChild(btn);
+      });
+      return group;
+    }
+
+    updateLayout() {
+      const curL = this.container.style.left;
+      const curT = this.container.style.top;
+      
+      // 清除行内样式（除了位置和旋转）
+      [this.container, this.rulerBody, this.resizeHandle, this.resizeIcon, this.toolbar, this.opacityInput].forEach(el => el.style.cssText = '');
+      Object.assign(this.container.style, { left: curL, top: curT });
+      this.updateRulerTransform();
+      
+      this.container.classList.remove('or-horizontal', 'or-vertical');
+      this.container.classList.add(this.isVertical ? 'or-vertical' : 'or-horizontal');
+
+      this.toolbar.innerHTML = '';
+      const presets = this.createAnglePresets();
+
+      this.colorSelector.style.display = this.state.material === 'PLASTIC' ? 'block' : 'none';
+
+      if (!this.isVertical) {
+        Object.assign(this.container.style, { width: this.hW + 'px' });
+        
+        const L = document.createElement('div'); 
+        L.style.cssText = 'display:flex;gap:8px;align-items:center;overflow:visible;'; 
+        L.append(this.unitSelect, this.materialSelect, this.colorSelector, presets);
+        
+        const R = document.createElement('div'); 
+        R.style.cssText = 'display:flex;gap:8px;align-items:center;flex-shrink:0;'; 
+        R.append(this.opacityInput, this.closeBtn);
+        
+        this.toolbar.append(L, R); 
+      } else {
+        Object.assign(this.container.style, { height: this.vH + 'px' });
+        
+        const T = document.createElement('div'); T.style.textAlign = 'right'; T.append(this.closeBtn);
+        const O = document.createElement('div'); O.style.cssText = "margin-top: auto; padding-bottom: 10px; display: flex; justify-content: center;";
+        O.append(this.opacityInput); 
+        
+        this.toolbar.append(T, this.unitSelect, this.materialSelect, this.colorSelector, presets, O);
+      }
+      this.updateRulerContent();
+    }
+
+    initEvents() {
+      this.unitSelect.onchange = (e) => chrome.storage.local.set({ unit: e.target.value });
+      this.materialSelect.onchange = (e) => {
+        this.state.material = e.target.value;
+        this.updateLayout();
+        chrome.storage.local.set({ material: e.target.value });
+      };
+
+      let sX, sY, iL, iT, iW, iH;
+      
+      this.container.onmousedown = (e) => {
+        // 置顶逻辑
+        window.OnlineRulerInstance.maxZIndex = (window.OnlineRulerInstance.maxZIndex || 1000000) + 1;
+        this.container.style.zIndex = window.OnlineRulerInstance.maxZIndex;
+
+        if (e.target.closest('select, input, button, .color-selector')) return;
+        sX = e.clientX; sY = e.clientY;
+        if (e.target === this.rotateHandle) { 
+          this.mode = 'rotate'; 
+          this.pivotX = parseInt(this.container.style.left) || 100;
+          this.pivotY = parseInt(this.container.style.top) || 100;
+          this.rotateHandle.classList.add('active'); this.angleBadge.style.display = 'block';
+        } else if (e.target.closest('.resize-handle')) { 
+          this.mode = 'resize'; iW = this.container.offsetWidth; iH = this.container.offsetHeight; 
+        } else { 
+          this.mode = 'drag'; iL = this.container.offsetLeft; iT = this.container.offsetTop; 
+        }
+        e.preventDefault();
+
+        const onMouseMove = (me) => {
+          if (!this.mode) return;
+          if (this.mode === 'drag') {
+            this.container.style.left = (iL + me.clientX - sX) + 'px';
+            this.container.style.top = (iT + me.clientY - sY) + 'px';
+          } else if (this.mode === 'resize') {
+            if (!this.isVertical) { 
+              this.hW = Math.max(320, iW + me.clientX - sX); 
+              this.container.style.width = this.hW + 'px'; 
+              this.updateRulerContent(); 
+            } else { 
+              this.vH = Math.max(320, iH + me.clientY - sY); 
+              this.container.style.height = this.vH + 'px'; 
+              this.updateRulerContent(); 
+            }
+          } else if (this.mode === 'rotate') {
+            const angle = Math.atan2(me.clientY - this.pivotY, me.clientX - this.pivotX) * 180 / Math.PI;
+            let finalAngle = this.isVertical ? angle - 90 : angle;
+            [0, 45, 90, 135, 180, -45, -90, -135, -180].forEach(snap => {
+              if (Math.abs(finalAngle - snap) < 2) finalAngle = snap;
+            });
+            this.state.angle = finalAngle;
+            this.updateRulerTransform();
+          }
+        };
+
+        const onMouseUp = () => {
+          if (this.mode === 'rotate') {
+            this.rotateHandle.classList.remove('active');
+            setTimeout(() => { if(!this.mode) this.angleBadge.style.display = 'none'; }, 1000);
+          }
+          this.mode = ''; 
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      };
+
+      window.addEventListener('showMilestone', this.handleMilestone.bind(this));
+    }
+
+    handleMilestone(e) {
+      if (document.getElementById('milestone-bubble')) return;
+      const { message, reviewUrl, coffeeUrl, milestoneId } = e.detail;
+
+      const bubble = document.createElement('div');
+      bubble.id = 'milestone-bubble';
+      bubble.className = 'milestone-bubble';
+      
+      if (!this.isVertical) {
+        bubble.style.bottom = '105%'; bubble.style.left = '10px'; bubble.style.width = '200px';
+      } else {
+        bubble.style.left = '105%'; bubble.style.top = '10px'; bubble.style.width = '160px';
+      }
+
+      bubble.innerHTML = `
+        <div style="margin-bottom:6px;">${message}</div>
+        <div style="display:flex; gap:6px;">
+          <a href="${reviewUrl}" target="_blank" class="milestone-act" style="color:#2e7d32; font-weight:bold; text-decoration:none;">⭐ ${chrome.i18n.getMessage('rate')}</a>
+          <a href="${coffeeUrl}" target="_blank" class="milestone-act" style="color:#ef6c00; font-weight:bold; text-decoration:none;">☕ ${chrome.i18n.getMessage('coffee')}</a>
+          <span id="closeBubble" style="margin-left:auto; cursor:pointer; color:#999;">✕</span>
+        </div>
+      `;
+      this.container.appendChild(bubble);
+
+      const markAchieved = (suppress = false) => {
+        SharedLogic.Milestones.getStats(stats => {
+          stats.achieved.push(milestoneId);
+          stats.lastPromptTime = Date.now();
+          if (suppress) stats.suppressAll = true;
+          chrome.storage.local.set({ user_stats: stats });
+          bubble.remove();
+        });
+      };
+
+      bubble.querySelectorAll('.milestone-act').forEach(a => a.onclick = () => markAchieved(true));
+      bubble.querySelector('#closeBubble').onclick = () => markAchieved(false);
+    }
+  }
+
+  window.OnlineRulerInstance = OnlineRulerInstance;
+  new OnlineRulerInstance();
 })();

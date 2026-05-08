@@ -3,10 +3,94 @@ var SharedLogic = SharedLogic || {
   CONSTANTS: {
     MM_PER_INCH: 25.4,
     DEFAULT_PPI: 96,
-    WOOD_BASE_COLOR: "#dcb35c",
-    TEXTURES: {
-      HORIZONTAL: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6 0.005' numOctaves='5'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      VERTICAL: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.6' numOctaves='5'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.25 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`
+    COFFEE_URL: "https://ko-fi.com/qiyuanyang",
+    REVIEW_URL: "https://chromewebstore.google.com/detail/online-ruler/hdflbmnojjkedghfaioipcbjiainnpnn/reviews",
+    UNITS: [['cm', 'unitCm', 'CM/MM'], ['in', 'unitIn', 'Inch']],
+    MATERIALS: [['WOOD', 'matWood', 'Wood'], ['PLASTIC', 'matPlastic', 'Plastic'], ['METAL', 'matMetal', 'Metal']],
+    get MATERIAL_DETAILS() {
+      return {
+        WOOD: { 
+          baseColor: "#dcb35c", 
+          filterH: "woodFilterH", 
+          filterV: "woodFilterV" 
+        },
+        PLASTIC: { 
+          baseColor: SharedLogic.COLORS[0].val, 
+          filterH: "plasticFilter", 
+          filterV: "plasticFilter" 
+        },
+        METAL: { 
+          baseColor: "#bdc3c7", 
+          filterH: "metalFilterH", 
+          filterV: "metalFilterV" 
+        }
+      };
+    }
+  },
+
+  // 公用颜色定义
+  COLORS: [
+    { val: 'rgba(255, 255, 255, 0.85)', key: 'colorWhite', hex: '#FFFFFF' },
+    { val: 'rgba(64, 235, 253, 0.85)', key: 'colorCyan', hex: '#40EBFD' },
+    { val: 'rgba(255, 0, 234, 0.85)', key: 'colorMagenta', hex: '#FF00EA' },
+    { val: 'rgba(255, 136, 229, 0.85)', key: 'colorPink', hex: '#FF88E5' },
+    { val: 'rgba(255, 142, 55, 0.85)', key: 'colorOrange', hex: '#FF8E37' },
+    { val: 'rgba(229, 249, 93, 0.85)', key: 'colorLime', hex: '#E5F95D' },
+    { val: 'rgba(0, 255, 83, 0.85)', key: 'colorGreen', hex: '#00FF53' }
+  ],
+
+  UI: {
+    /**
+     * 设置颜色选择器
+     * @param {HTMLElement} container 容器
+     * @param {Object} state 状态对象
+     * @param {Function} onColorChange 回调
+     */
+    setupColorSelector: function(container, state, onColorChange) {
+      container.className = 'color-selector';
+      container.innerHTML = ''; // 清空
+
+      const colorTrigger = document.createElement('div');
+      colorTrigger.className = 'color-trigger';
+      container.appendChild(colorTrigger);
+
+      const colorOptionsList = document.createElement('div');
+      colorOptionsList.className = 'color-options-list';
+      container.appendChild(colorOptionsList);
+
+      const updateUI = () => {
+        const item = SharedLogic.COLORS[state.currentColorIdx || 0];
+        colorTrigger.innerText = chrome.i18n.getMessage(item.key) || item.key;
+        colorTrigger.style.backgroundColor = item.hex;
+      };
+
+      SharedLogic.COLORS.forEach((item, idx) => {
+        const opt = document.createElement('div');
+        opt.className = 'color-opt';
+        opt.innerText = chrome.i18n.getMessage(item.key) || item.key;
+        opt.style.backgroundColor = item.hex;
+        opt.onmousedown = (e) => {
+          e.stopPropagation();
+          state.currentColorIdx = idx;
+          updateUI();
+          onColorChange(item);
+          colorOptionsList.style.display = 'none';
+        };
+        colorOptionsList.appendChild(opt);
+      });
+
+      colorTrigger.onmousedown = (e) => {
+        e.stopPropagation();
+        const isVisible = colorOptionsList.style.display === 'flex';
+        colorOptionsList.style.display = isVisible ? 'none' : 'flex';
+      };
+
+      window.addEventListener('mousedown', () => { 
+        colorOptionsList.style.display = 'none'; 
+      });
+
+      updateUI();
+      return { updateUI };
     }
   },
 
@@ -16,94 +100,14 @@ var SharedLogic = SharedLogic || {
     return SharedLogic.CONSTANTS.DEFAULT_PPI;
   },
 
-  drawRuler: function(svg, options) {
-    const { width, height, isVertical, unit, physicalPpi, zeroOffset } = options;
-    if (width === 0 || height === 0) return;
-
-    svg.setAttribute('width', width);
-    svg.setAttribute('height', height);
-    while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-    const ppi = physicalPpi;
-    const pixelsPerMm = ppi / SharedLogic.CONSTANTS.MM_PER_INCH;
-    const offsetPx = (zeroOffset || 0) * pixelsPerMm;
-    const rulerLength = isVertical ? height : width;
-    
-    const fragment = document.createDocumentFragment();
-    const ns = "http://www.w3.org/2000/svg";
-
-    if (unit === 'cm') {
-      const startMm = -Math.ceil(Math.max(0, -(zeroOffset || 0)));
-      for (let i = startMm; ; i++) {
-        const pos = i * pixelsPerMm + offsetPx;
-        if (pos > rulerLength + 5) break;
-        if (pos < -5) continue; 
-
-        const lineH = (i % 10 === 0) ? 25 : (i % 5 === 0 ? 18 : 10);
-        const line = document.createElementNS(ns, "line");
-        if (!isVertical) {
-          line.setAttribute("x1", pos); line.setAttribute("y1", 0);
-          line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
-        } else {
-          line.setAttribute("x1", 0); line.setAttribute("y1", pos);
-          line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
-        }
-        line.setAttribute("stroke", "black");
-        line.setAttribute("stroke-width", "1");
-        fragment.appendChild(line);
-
-        if (i % 10 === 0) {
-          const text = document.createElementNS(ns, "text");
-          if (!isVertical) { text.setAttribute("x", pos + 2); text.setAttribute("y", 35); }
-          else { text.setAttribute("x", 28); text.setAttribute("y", pos + 5); }
-          text.setAttribute("font-size", "10");
-          text.setAttribute("font-family", "sans-serif");
-          text.textContent = i / 10;
-          fragment.appendChild(text);
-        }
-      }
-    } else {
-      const pixelsPerInch = ppi;
-      const startStep = -Math.ceil(Math.max(0, -((zeroOffset || 0) / SharedLogic.CONSTANTS.MM_PER_INCH) * 16));
-      for (let i = startStep; ; i++) {
-        const pos = i * (pixelsPerInch / 16) + offsetPx;
-        if (pos > rulerLength + 5) break;
-        if (pos < -5) continue;
-
-        const lineH = (i % 16 === 0) ? 25 : (i % 8 === 0 ? 18 : (i % 4 === 0 ? 14 : (i % 2 === 0 ? 11 : 8)));
-        const line = document.createElementNS(ns, "line");
-        if (!isVertical) {
-          line.setAttribute("x1", pos); line.setAttribute("y1", 0);
-          line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
-        } else {
-          line.setAttribute("x1", 0); line.setAttribute("y1", pos);
-          line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
-        }
-        line.setAttribute("stroke", "black");
-        line.setAttribute("stroke-width", "1");
-        fragment.appendChild(line);
-
-        if (i % 16 === 0) {
-          const text = document.createElementNS(ns, "text");
-          if (!isVertical) { text.setAttribute("x", pos + 2); text.setAttribute("y", 35); }
-          else { text.setAttribute("x", 28); text.setAttribute("y", pos + 5); }
-          text.setAttribute("font-size", "10");
-          text.setAttribute("font-family", "sans-serif");
-          text.textContent = i / 16;
-          fragment.appendChild(text);
-        }
-      }
-    }
-    svg.appendChild(fragment);
-  },
-
-  // 状态同步引擎，增加 angle 支持
+  // 状态同步引擎，增加 material 支持
   bindState: function(state, callback) {
-    chrome.storage.local.get(['ppi', 'unit', 'zeroOffset', 'physicalPpi', 'angle'], (result) => {
+    chrome.storage.local.get(['ppi', 'unit', 'zeroOffset', 'physicalPpi', 'angle', 'material'], (result) => {
       state.ppi = SharedLogic.getPhysicalPpi(result);
       state.unit = result.unit || 'cm';
       state.zeroOffset = result.zeroOffset || 0;
       state.angle = result.angle || 0;
+      state.material = result.material || 'WOOD';
       callback(true);
     });
 
@@ -140,5 +144,109 @@ var SharedLogic = SharedLogic || {
       mql.addEventListener('change', () => { callback(); check(); }, { once: true });
     };
     check();
+  },
+
+  // 里程碑管理系统
+  Milestones: {
+    getStats: function(callback) {
+      chrome.storage.local.get(['user_stats'], (result) => {
+        const stats = result.user_stats || {
+          installDate: Date.now(),
+          totalOpens: 0,
+          overlayInjections: 0,
+          calibrationSaves: 0,
+          unitSwitches: 0,
+          zeroOffsetChanges: 0,
+          lastPromptTime: 0,
+          achieved: [],
+          suppressAll: false
+        };
+        callback(stats);
+      });
+    },
+
+    updateStats: function(key, increment = 1) {
+      this.getStats((stats) => {
+        if (stats.suppressAll) return;
+        if (stats[key] !== undefined) {
+          if (typeof stats[key] === 'number') stats[key] += increment;
+          else stats[key] = increment;
+        } else {
+          stats[key] = increment;
+        }
+        chrome.storage.local.set({ user_stats: stats }, () => {
+          this.checkTriggers(stats);
+        });
+      });
+    },
+
+    checkTriggers: function(stats) {
+      if (stats.suppressAll) return;
+      const now = Date.now();
+      // 冷却时间：3天 (3 * 24 * 60 * 60 * 1000)
+      if (now - (stats.lastPromptTime || 0) < 259200000) return;
+
+      const milestones = [
+        { id: 'm1_calibrated', check: s => s.calibrationSaves >= 1 },
+        { id: 'm2_power_user', check: s => s.totalOpens >= 10 },
+        { id: 'm3_overlay_pro', check: s => s.overlayInjections >= 5 },
+        { id: 'm4_night_owl', check: () => { const h = new Date().getHours(); return h >= 23 || h < 4; } },
+        { id: 'm5_unit_switcher', check: s => s.unitSwitches >= 3 },
+        { id: 'm6_long_term', check: s => (now - s.installDate) > 2592000000 }, // 30天
+        { id: 'm7_detail_oriented', check: s => s.zeroOffsetChanges >= 5 }
+      ];
+
+      for (const m of milestones) {
+        if (!stats.achieved.includes(m.id) && m.check(stats)) {
+          this.showPrompt(m.id);
+          break; // 一次只触发一个
+        }
+      }
+    },
+
+    showPrompt: function(milestoneId) {
+      const coffeeUrl = SharedLogic.CONSTANTS.COFFEE_URL; 
+      const reviewUrl = SharedLogic.CONSTANTS.REVIEW_URL;
+
+      const message = chrome.i18n.getMessage('milestone_' + milestoneId) || "Support this project!";
+      
+      // 发送消息给当前的 UI 层（Popup 或 Overlay）来显示
+      // 如果是 Popup，直接查找容器显示
+      const popupFooter = document.querySelector('.footer');
+      if (popupFooter) {
+        this.renderPopupPrompt(message, reviewUrl, coffeeUrl, milestoneId);
+      } else {
+        // 通知 Overlay
+        window.dispatchEvent(new CustomEvent('showMilestone', { detail: { message, reviewUrl, coffeeUrl, milestoneId } }));
+      }
+    },
+
+    renderPopupPrompt: function(msg, reviewUrl, coffeeUrl, id) {
+      if (document.getElementById('milestone-prompt')) return;
+      const div = document.createElement('div');
+      div.id = 'milestone-prompt';
+      div.innerHTML = `
+        <div class="prompt-msg">${msg}</div>
+        <div class="prompt-actions">
+          <a href="${reviewUrl}" target="_blank" class="prompt-btn">⭐ ${chrome.i18n.getMessage('rate')}</a>
+          <a href="${coffeeUrl}" target="_blank" class="prompt-btn">☕ ${chrome.i18n.getMessage('coffee')}</a>
+          <button id="closePrompt">${chrome.i18n.getMessage('later')}</button>
+        </div>
+      `;
+      document.body.appendChild(div);
+
+      const markAchieved = (suppress = false) => {
+        this.getStats(stats => {
+          stats.achieved.push(id);
+          stats.lastPromptTime = Date.now();
+          if (suppress) stats.suppressAll = true;
+          chrome.storage.local.set({ user_stats: stats });
+          div.remove();
+        });
+      };
+
+      div.querySelectorAll('.prompt-btn').forEach(btn => btn.onclick = () => markAchieved(true));
+      document.getElementById('closePrompt').onclick = () => markAchieved(false);
+    }
   }
 };

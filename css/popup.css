@@ -117,3 +117,43 @@ button:hover {
 
 .footer a { color: #666; text-decoration: none; }
 .footer .divider { margin: 0 8px; color: #ccc; }
+
+/* 里程碑提示样式 */
+#milestone-prompt {
+  background: #fffde7;
+  border-top: 1px solid #fff59d;
+  padding: 10px;
+  font-size: 12px;
+  position: fixed;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+#milestone-prompt a.prompt-btn {
+  color: white;
+  text-decoration: none;
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+#milestone-prompt a.prompt-btn:nth-child(1) { background: #4caf50; }
+#milestone-prompt a.prompt-btn:nth-child(2) { background: #ff9800; }
+
+#milestone-prompt #closePrompt {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 11px;
+}
