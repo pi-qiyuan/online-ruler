@@ -9,13 +9,14 @@
   <div class="actions-group">
     <button id="openRuler" data-i18n="openRuler">打开独立尺子窗口</button>
     <button id="addOverlayRuler" data-i18n="addOverlayRuler">在当前页添加尺子</button>
+    <button id="addProtractor" data-i18n="addProtractor">在当前页添加量角器</button>
     <button id="openCalibration" data-i18n="openCalibration">进入校准模式</button>
   </div>
   
   <div class="settings-group">
     <div class="setting-item">
       <div class="setting-label-row">
-        <label data-i18n="zeroOffsetLabel">零点偏移 (mm): </label>
+        <label data-i18n="zeroOffsetLabel">尺子零点偏移 (mm): </label>
         <span id="zeroOffsetVal">0</span>
         <button id="resetZero" class="mini-btn" data-i18n="resetZero">归零</button>
       </div>
@@ -44,6 +45,10 @@
   </div>
 
   <script src="js/shared.js"></script>
+  <script src="js/shared/constants.js"></script>
+  <script src="js/shared/storage.js"></script>
+  <script src="js/shared/i18n.js"></script>
+  <script src="js/shared/milestones.js"></script>
   <script src="js/popup.js"></script>
 </body>
 </html>

@@ -5,7 +5,6 @@
   cursor: move;
   user-select: none;
   display: flex;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   border-radius: 6px;
   transform-origin: 0 0;
   will-change: transform, left, top;
@@ -116,7 +115,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -252,7 +250,6 @@
   flex-direction: column;
   border-radius: 3px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   border: 1px solid #555;
 }
 
@@ -299,8 +296,111 @@
   font-size: 14px;
 }
 
-.online-ruler-overlay .close-btn:hover {
-  color: #fff !important;
+.online-ruler-overlay.or-protractor {
+  flex-direction: column;
+  background: transparent;
+  position: fixed;
+}
+
+.online-ruler-overlay.or-protractor .ruler-body {
+  border-radius: 0;
+}
+
+.online-ruler-overlay.or-protractor .ruler-toolbar {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 15px;
+  height: 26px;
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.online-ruler-overlay.or-protractor .ruler-toolbar > div {
+  pointer-events: auto;
+}
+
+.online-ruler-overlay.or-protractor .opacity-slider {
+  width: 92px;
+}
+
+.online-ruler-overlay.or-protractor .color-options-list {
+  bottom: 100%;
+  margin-bottom: 4px;
+}
+
+.online-ruler-overlay.or-protractor .protractor-angle-presets {
+  position: absolute;
+  left: calc(50% + 24px);
+  top: -28px;
+  height: 124px;
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 20;
+}
+
+.online-ruler-overlay.or-protractor .protractor-angle-presets::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: 100%;
+  width: 14px;
+  height: 28px;
+}
+
+.online-ruler-overlay.or-protractor .protractor-angle-presets::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 32px;
+  height: 96px;
+}
+
+.online-ruler-overlay.or-protractor .ruler-body:hover .protractor-angle-presets,
+.online-ruler-overlay.or-protractor .protractor-angle-presets:hover {
+  opacity: 0.8;
+  pointer-events: auto;
+}
+
+.online-ruler-overlay.or-protractor .protractor-angle-presets button {
+  font-size: 11px;
+  padding: 2px 5px;
+  background: #444;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  cursor: pointer;
+  top: 0px;
+  position: relative;
+  height: 24px;
+}
+
+.online-ruler-overlay .mode-toggle-btn {
+  font-size: 14px !important;
+  background: #555 !important;
+  border: 1px solid #666 !important;
+  width: 28px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.online-ruler-overlay .mode-toggle-btn:hover {
+  background: #666 !important;
 }
 
 .milestone-bubble {
@@ -310,7 +410,6 @@
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   z-index: 1000;
   color: #333;
   line-height: 1.4;

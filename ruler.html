@@ -40,7 +40,7 @@
         <select id="refObject">
           <option value="card" data-w="85.6" data-h="53.98" data-i18n="refCard">信用卡 (85.6mm)</option>
           <option value="a4" data-w="210" data-h="297" data-i18n="refA4">A4 纸宽度 (210mm)</option>
-          <option value="coin" data-w="25" data-h="25" data-i18n="refCoin">一元硬币 (25mm)</option>
+          <option value="coin" data-w="24.26" data-h="24.26" data-i18n="refCoin">U.S. Quarter (24.26mm)</option>
         </select>
       </div>
       <div class="step">
@@ -57,7 +57,9 @@
         </div>
       </div>
       <div id="calibrationBoxContainer">
-        <div id="calibrationBox"></div>
+        <div id="calibrationBoxTrack">
+          <div id="calibrationBox"></div>
+        </div>
       </div>
       <div class="actions">
         <button id="saveCalibration" data-i18n="saveAndStart">保存校准并开始测量</button>
@@ -67,6 +69,11 @@
   </div>
 
   <script src="js/shared.js"></script>
+  <script src="js/shared/constants.js"></script>
+  <script src="js/shared/ui.js"></script>
+  <script src="js/shared/storage.js"></script>
+  <script src="js/shared/i18n.js"></script>
+  <script src="js/shared/milestones.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/ruler.js"></script>
 </body>

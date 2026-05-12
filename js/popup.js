@@ -17,7 +17,7 @@ document.getElementById('openRuler').onclick = () => {
 
 document.getElementById('openCalibration').onclick = () => chrome.tabs.create({ url: 'ruler.html?calibrate=true' });
 
-document.getElementById('addOverlayRuler').onclick = async () => {
+async function injectOverlay(mode = 'ruler') {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab) {
     try {
@@ -29,14 +29,44 @@ document.getElementById('addOverlayRuler').onclick = async () => {
       // 注入 JS
       await chrome.scripting.executeScript({ 
         target: { tabId: tab.id }, 
-        files: ['js/shared.js', 'js/engine.js', 'js/overlay.js'] 
+        files: [
+          'js/shared.js',
+          'js/shared/constants.js',
+          'js/shared/ui.js',
+          'js/shared/storage.js',
+          'js/shared/i18n.js',
+          'js/shared/milestones.js',
+          'js/engine.js'
+        ] 
       });
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: (nextMode) => {
+          window.__onlineRulerNextMode = nextMode;
+        },
+        args: [mode]
+      });
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: [
+          'js/overlay/instance.js',
+          'js/overlay/elements.js',
+          'js/overlay/layout.js',
+          'js/overlay/milestones.js',
+          'js/overlay/events.js',
+          'js/overlay.js'
+        ]
+      });
+
       SharedLogic.Milestones.updateStats('overlayInjections');
     } catch (e) {
       alert(chrome.i18n.getMessage('unsupportedPage'));
     }
   }
-};
+}
+
+document.getElementById('addOverlayRuler').onclick = () => injectOverlay('ruler');
+document.getElementById('addProtractor').onclick = () => injectOverlay('protractor');
 
 zSlider.onchange = () => {
   SharedLogic.Milestones.updateStats('zeroOffsetChanges');

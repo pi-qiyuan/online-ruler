@@ -8,57 +8,60 @@ Do you often struggle to obtain accurate measurements when sizing objects on you
 
 Whether you are a designer, an engineer, or simply a user who needs to measure small objects on your screen, this extension offers you the most intuitive and reliable digital measurement solution available.
 
-## 🎉 NEW IN v1.2.0: MULTIPLE RULERS & NEW MATERIALS
+## 🎉 v2.0.0 MAJOR UPDATE: ALL-IN-ONE GEOMETRIC PROTRACTOR
 
-This update brings more powerful multi-dimensional measurement capabilities and personalized visual options:
+This update marks the leap from a simple measuring tool to a comprehensive geometry toolkit:
 
-* ✨ **Multiple Rulers**: Support for adding multiple rulers on the same page to meet complex comparative measurement needs.
+* ✨ **New Protractor Feature**: Now you can add protractors to any webpage, not just rulers.
 
-* ✨ **Plastic & Metal Materials**:
-    - Plastic: Offers a variety of fresh, selectable colors for a more vibrant interface.
-    - Metal: Realistic brushed metal texture for a professional, tech-forward aesthetic.
+* ✨ **360° Free Rotation**: The protractor supports full 360-degree rotation via a handle, allowing you to measure slope angles and angles between objects with precision.
 
-* ✨ **Material Color Customization**: Plastic material now supports switching between multiple color schemes to suit different backgrounds and personal preferences.
+* ✨ **Multiple Color Styles**: The protractor offers several semi-transparent color schemes (e.g., Classic Blue, Tech Green, Vital Orange), ensuring clear visibility on any background.
 
+* ✨ **Synchronized Calibration**: The protractor also uses your PPI calibration data to ensure a true physical size on your screen.
+
+## 🎒 STUDENT'S CORNER: FUN WITH GEOMETRY (Great for 4th Graders!)
+
+Hey there, young explorers! Are you learning about shapes and angles in school? This tool is like having a magic math kit right inside your computer. Here is how you can use it for your homework and fun projects:
+
+* 📐 **Measuring Lengths**: Use the **Ruler** to measure how long things are on your screen. You can use Centimeters (cm) or Millimeters (mm), just like the ruler in your pencil case!
+
+* 📐 **Measuring Angles**: Have you learned about "Right Angles" or "Acute Angles"? Use the **Protractor** to find out exactly how many degrees an angle has. Just put the center of the protractor on the corner of the shape and turn the handle!
+
+* 📐 **Mix and Match**: You can put many rulers and protractors on the page at the same time to see how different shapes fit together.
+
+* 🎨 **Fun Colors**: You can change your tools to look like wood, shiny metal, or colorful plastic. Pick your favorite color to make math time more fun!
 
 ## 🌟 Core Features
 * ✨ **Physical-Level Calibration**:
+    - Align the tool with standard physical objects—like a credit card or A4 paper—to automatically calculate your screen's exact PPI.
 
-    Calibrate the ruler by aligning it with standard physical objects—such as a credit card, a sheet of A4 paper, or a coin—to automatically calculate your screen's exact PPI. Supports +/- buttons for fine-tuning adjustments down to a single pixel.
+* 📏 **Multi-Tool Support**:
+    - Add multiple rulers or protractors on the same page for complex comparative measurements and geometric positioning.
 
 * 📏 **Dual Measurement Modes**:
-
-    Standalone Window Mode: Opens a clean, "always-on-top" ruler window that supports free resizing and switching between horizontal and vertical orientations.
-
-    Page Overlay Mode: Displays a floating ruler directly over any webpage; supports transparency adjustments to ensure it does not interfere with your reading experience.
+    - Standalone Window Mode: Opens a clean, "always-on-top" ruler window.
+    - Page Overlay Mode: Displays floating rulers or protractors directly over any webpage with adjustable transparency.
 
 * 🔄 **360° Arbitrary Rotation**:
+    - Use the rotation handle to adjust the angle in real-time. Rulers support snapping to key angles (45°/90°) and display a real-time angle badge.
 
-    Break free from horizontal and vertical constraints. Use the rotation handle to adjust the angle in real-time. Supports snapping to key angles (45°/90°) and displays a real-time angle badge.
+* 🔄 **Zero Offset & Reset (Ruler)**:
+    - Mimics the protective "zero-point" edge and allows setting a custom starting offset. Includes a one-click "Reset" function.
 
-* 🔄 **Zero Offset & Reset**:
-
-    Mimics the protective "zero-point" edge found on physical rulers, allowing you to set a custom starting offset (in mm). Includes a one-click "Reset to Zero" function to quickly restore the measurement baseline.
-
-* 🪵 **Realistic Multi-Material Aesthetics**:
-
-    Features ruler bodies in Wood, Plastic, or Metal textures. Generated via dynamic SVG filters, balancing a professional look with visual comfort while ensuring crisp markings.
+* 🎨 **Realistic Aesthetics & Materials**:
+    - Rulers support Wood, Plastic, or Metal textures with dynamic SVG filters. Plastic materials offer several color options.
 
 * 📏 **Comprehensive Scale Support**:
-
-    Metric: Centimeter (CM) and Millimeter (MM) scales. 
-
-    Imperial: Inch scales, featuring high-precision subdivisions down to 1/16 of an inch.
+    - Metric: Centimeter (CM) and Millimeter (MM).
+    - Imperial: Inch scales, high-precision down to 1/16 of an inch.
 
 * 🔄 **Flexible Interaction Logic**:
-
-    Full-Edge Resizing: In Overlay Mode, simply drag any point along the end of the ruler to adjust its length—no need to hunt for a tiny resize handle in the bottom-right corner.
-
-    Real-time Synchronization: Changes to Popup settings—such as zero-point offsets—are instantly applied to all currently open rulers.
+    - Full-Edge Resizing: Drag any point along the end of the ruler to adjust its length.
+    - Real-time Synchronization: Changes to materials, colors, or settings are applied instantly.
 
 * 💾 **Privacy & Local Storage**:
-
-    All calibration data (PPI, unit preferences, offsets) is stored exclusively within your local browser; absolutely no data is uploaded to external servers.
+    - All calibration data is stored exclusively within your local browser.
 
 ### Installation
 [Download on Chrome Web Store](https://chromewebstore.google.com/detail/online-ruler/hdflbmnojjkedghfaioipcbjiainnpnn)

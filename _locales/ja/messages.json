@@ -4,6 +4,7 @@
   "openRuler": { "message": "独立したウィンドウで開く" },
   "openCalibration": { "message": "校正（キャリブレーション）モード" },
   "addOverlayRuler": { "message": "現在のページに定規を表示" },
+  "addProtractor": { "message": "現在のページに分度器を表示" },
   "unsupportedPage": { "message": "このページでは制限により定規を表示できません（設定ページやストアなど）。" },
   "currentPpi": { "message": "現在の PPI: $1" },
   "currentPpiLabel": { "message": "現在の PPI: " },
@@ -21,10 +22,10 @@
   "step2": { "message": "2. 実物を画面に当て、スライダーを動かして赤い枠と重ねてください：" },
   "refCard": { "message": "クレジットカード (85.6mm)" },
   "refA4": { "message": "A4 用紙の幅 (210mm)" },
-  "refCoin": { "message": "500円玉 (26.5mm)" },
+  "refCoin": { "message": "100円硬貨 (22.6mm)" },
   "saveAndStart": { "message": "保存して計測を開始" },
   "cancel": { "message": "キャンセル" },
-  "zeroOffsetLabel": { "message": "ゼロ点オフセット (mm): " },
+  "zeroOffsetLabel": { "message": "定規のゼロ点オフセット (mm): " },
   "resetZero": { "message": "リセット" },
   "windowTitle": { "message": "オンライン定規 - 1:1 精密計測" },
   "more_tools": { "message": "他のツール" },
@@ -47,3 +48,4 @@
   "colorLime": { "message": "ライム" },
   "colorGreen": { "message": "グリーン" }
 }
+

@@ -3,14 +3,24 @@ let isVertical = false;
 
 const svg = document.getElementById('rulerSvg');
 const modal = document.getElementById('calibrationModal');
+const modalContent = modal.querySelector('.modal-content');
 const ppiSlider = document.getElementById('ppiSlider');
 const calibrationBox = document.getElementById('calibrationBox');
+const calibrationBoxTrack = document.getElementById('calibrationBoxTrack');
 const currentPpiText = document.getElementById('currentPpi');
 const unitSelect = document.getElementById('unitSelect');
 const materialSelect = document.getElementById('materialSelect');
 const customColorSelectorContainer = document.getElementById('customColorSelector');
+let initialCalibrationModalWidth = 0;
 
 SharedLogic.initI18n();
+
+const coinReference = SharedLogic.getLocalizedCoinReference();
+const coinOption = document.querySelector('#refObject option[value="coin"]');
+if (coinOption) {
+  coinOption.dataset.w = coinReference.width;
+  coinOption.dataset.h = coinReference.height;
+}
 
 // 加载材质库
 MeasurementEngine.loadMaterials();
@@ -61,6 +71,16 @@ function updateCalibrationBox() {
   if (!selected) return;
   const wPx = (parseFloat(selected.dataset.w) / SharedLogic.CONSTANTS.MM_PER_INCH) * ppiSlider.value;
   const hPx = (parseFloat(selected.dataset.h) / SharedLogic.CONSTANTS.MM_PER_INCH) * ppiSlider.value;
+  const sidePadding = 80;
+  const modalPadding = 60;
+  const viewportGap = 40;
+  if (!initialCalibrationModalWidth) {
+    initialCalibrationModalWidth = modalContent.offsetWidth;
+  }
+  const maxModalWidth = Math.max(initialCalibrationModalWidth, window.innerWidth - viewportGap);
+  const targetModalWidth = Math.ceil(wPx + sidePadding + modalPadding);
+  modalContent.style.width = Math.min(Math.max(targetModalWidth, initialCalibrationModalWidth), maxModalWidth) + 'px';
+  calibrationBoxTrack.style.width = Math.ceil(wPx + sidePadding) + 'px';
   calibrationBox.style.width = wPx + 'px';
   calibrationBox.style.height = hPx + 'px';
   currentPpiText.innerText = ppiSlider.value;
@@ -100,5 +120,8 @@ document.getElementById('toggleDir').onclick = () => {
   updateDisplay();
 };
 
-window.onresize = updateDisplay;
+window.onresize = () => {
+  updateDisplay();
+  if (!modal.classList.contains('hidden')) updateCalibrationBox();
+};
 SharedLogic.listenToZoom(updateDisplay);
