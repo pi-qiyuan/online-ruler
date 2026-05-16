@@ -4,6 +4,7 @@
   "openRuler": { "message": "Abrir regla en una ventana independiente" },
   "openCalibration": { "message": "Entrar en modo de calibración" },
   "addOverlayRuler": { "message": "Añadir regla a la página actual" },
+  "addAngleTool": { "message": "Añadir medidor de ángulos de 3 puntos" },
   "addProtractor": { "message": "Añadir transportador a la página actual" },
   "unsupportedPage": { "message": "Página restringida; no se puede añadir la regla (ej. ajustes o tienda de apps)." },
   "currentPpi": { "message": "PPI actual: $1" },

@@ -4,7 +4,7 @@
 
   OnlineRulerInstance.prototype.initEvents = function() {
     this.modeToggleBtn.onclick = () => {
-      this.state.mode = this.state.mode === 'protractor' ? 'ruler' : 'protractor';
+      this.state.mode = this.state.mode === 'ruler' ? 'protractor' : 'ruler';
       this.updateLayout();
     };
 
@@ -32,7 +32,10 @@
       sX = e.clientX;
       sY = e.clientY;
 
-      if (e.target === this.rotateHandle) {
+      if (this.state.mode === 'angle' && e.target.closest('.angle-handle')) {
+        this.dragMode = 'angle-point';
+        this.activeAnglePoint = e.target.closest('.angle-handle').dataset.point;
+      } else if (e.target === this.rotateHandle) {
         this.dragMode = 'rotate';
         this.pivotX = parseInt(this.container.style.left) || 0;
         this.pivotY = parseInt(this.container.style.top) || 0;
@@ -77,6 +80,13 @@
           });
           this.state.angle = finalAngle;
           this.updateRulerTransform();
+        } else if (this.dragMode === 'angle-point') {
+          const rect = this.rulerBody.getBoundingClientRect();
+          const point = this.anglePoints[this.activeAnglePoint];
+          point.x = me.clientX - rect.left;
+          point.y = me.clientY - rect.top;
+          this.snapAngleToolArm(this.activeAnglePoint);
+          this.updateAngleToolContent();
         }
       };
 
@@ -87,6 +97,7 @@
             if (!this.dragMode) this.angleBadge.style.display = 'none';
           }, 1000);
         }
+        this.activeAnglePoint = '';
         this.dragMode = '';
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);

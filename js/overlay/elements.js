@@ -36,6 +36,24 @@
       this.rulerBody.append(this.svg, this.resizeHandle, this.rotateHandle, this.angleBadge);
       this.container.append(this.rulerBody, this.toolbar);
 
+      this.angleHandles = {};
+      [
+        ['armA', 'A'],
+        ['vertex', 'V'],
+        ['armB', 'B']
+      ].forEach(([key, label]) => {
+        const handle = document.createElement('div');
+        handle.className = `angle-handle angle-handle-${key}`;
+        handle.dataset.point = key;
+        handle.textContent = label;
+        this.angleHandles[key] = handle;
+        this.rulerBody.appendChild(handle);
+      });
+
+      this.angleLabel = document.createElement('div');
+      this.angleLabel.className = 'angle-measure-label';
+      this.rulerBody.appendChild(this.angleLabel);
+
       this.modeToggleBtn = document.createElement('button');
       this.modeToggleBtn.className = 'mode-toggle-btn';
       this.modeToggleBtn.title = 'Switch Ruler/Protractor';
@@ -70,13 +88,27 @@
         this.updateRulerContent();
       });
 
+      this.angleColorState = { currentColorIdx: 6 };
+      this.angleColorSelector = document.createElement('div');
+      this.angleColorHelper = SharedLogic.UI.setupColorSelector(this.angleColorSelector, this.angleColorState, () => {
+        chrome.storage.local.set({ angleColorIdx: this.angleColorState.currentColorIdx });
+        this.updateRulerContent();
+      });
+
       this.opacityInput = document.createElement('input');
       this.opacityInput.className = 'opacity-slider';
       this.opacityInput.type = 'range';
       this.opacityInput.min = '30';
       this.opacityInput.max = '100';
       this.opacityInput.value = '100';
-      this.opacityInput.oninput = (e) => this.container.style.opacity = e.target.value / 100;
+      this.opacityInput.oninput = (e) => {
+        if (this.state.mode === 'angle') {
+          this.angleSectorOpacity = parseFloat(e.target.value) / 100;
+          this.updateAngleToolContent();
+        } else {
+          this.container.style.opacity = e.target.value / 100;
+        }
+      };
 
       this.closeBtn = document.createElement('button');
       this.closeBtn.className = 'close-btn';

@@ -10,30 +10,57 @@
     Object.assign(this.container.style, { left: curL, top: curT });
     this.updateRulerTransform();
 
-    this.container.classList.remove('or-horizontal', 'or-vertical', 'or-protractor');
+    this.container.classList.remove('or-horizontal', 'or-vertical', 'or-protractor', 'or-angle');
 
-    if (this.state.mode === 'protractor') {
+    if (this.state.mode === 'angle') {
+      this.container.classList.add('or-angle');
+      this.resizeHandle.style.display = 'none';
+      this.rotateHandle.style.display = 'none';
+      this.angleBadge.style.display = 'none';
+      Object.assign(this.container.style, { width: this.angleToolWidth + 'px', height: this.angleToolHeight + 'px' });
+      Object.assign(this.rulerBody.style, { width: this.angleToolWidth + 'px', height: this.angleToolHeight + 'px' });
+    } else if (this.state.mode === 'protractor') {
       this.container.classList.add('or-protractor');
       this.resizeHandle.style.display = 'none';
+      this.rotateHandle.style.display = '';
       this.rotateHandle.style.left = '50%';
       this.rotateHandle.style.top = '-30px';
       this.rotateHandle.style.transform = 'translateX(-50%)';
     } else {
       this.container.classList.add(this.isVertical ? 'or-vertical' : 'or-horizontal');
       this.resizeHandle.style.display = 'flex';
+      this.rotateHandle.style.display = '';
     }
 
     this.toolbar.innerHTML = '';
     this.rulerBody.querySelectorAll('.protractor-angle-presets').forEach(el => el.remove());
     const presets = this.createAnglePresets();
 
+    Object.values(this.angleHandles).forEach(handle => {
+      handle.style.display = this.state.mode === 'angle' ? 'flex' : 'none';
+    });
+    this.angleLabel.style.display = this.state.mode === 'angle' ? 'block' : 'none';
+
     this.colorSelector.style.display = (this.state.material === 'PLASTIC' && this.state.mode === 'ruler') ? 'block' : 'none';
     this.protractorColorSelector.style.display = this.state.mode === 'protractor' ? 'block' : 'none';
+    this.angleColorSelector.style.display = this.state.mode === 'angle' ? 'block' : 'none';
     this.materialSelect.style.display = this.state.mode === 'ruler' ? 'block' : 'none';
     this.unitSelect.style.display = this.state.mode === 'ruler' ? 'block' : 'none';
-    this.modeToggleBtn.innerText = this.state.mode === 'protractor' ? '📏' : '📐';
+    this.modeToggleBtn.innerText = this.state.mode === 'ruler' ? '📐' : '📏';
 
-    if (this.state.mode === 'protractor' || !this.isVertical) {
+    if (this.state.mode === 'angle') {
+      const L = document.createElement('div');
+      L.style.cssText = 'display:flex;gap:6px;align-items:center;';
+      this.opacityInput.min = '0';
+      this.opacityInput.max = '60';
+      this.opacityInput.value = Math.round(this.angleSectorOpacity * 100);
+      L.append(this.angleColorSelector, this.opacityInput, this.closeBtn);
+
+      this.toolbar.append(L);
+    } else if (this.state.mode === 'protractor' || !this.isVertical) {
+      this.opacityInput.min = '30';
+      this.opacityInput.max = '100';
+      this.opacityInput.value = Math.round((parseFloat(this.container.style.opacity) || 1) * 100);
       if (this.state.mode !== 'protractor') {
         Object.assign(this.container.style, { width: this.hW + 'px' });
       }
@@ -54,6 +81,9 @@
 
       this.toolbar.append(L, R);
     } else {
+      this.opacityInput.min = '30';
+      this.opacityInput.max = '100';
+      this.opacityInput.value = Math.round((parseFloat(this.container.style.opacity) || 1) * 100);
       Object.assign(this.container.style, { height: this.vH + 'px' });
 
       const T = document.createElement('div');

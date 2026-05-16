@@ -4,6 +4,7 @@
   "openRuler": { "message": "Abrir janela de régua independente" },
   "openCalibration": { "message": "Entrar no modo de calibração" },
   "addOverlayRuler": { "message": "Adicionar régua à página atual" },
+  "addAngleTool": { "message": "Adicionar ferramenta de ângulo de 3 pontos" },
   "addProtractor": { "message": "Adicionar transferidor à página atual" },
   "unsupportedPage": { "message": "A página atual é restrita; não é possível adicionar uma régua (ex: páginas de configurações ou Web Store)." },
   "currentPpi": { "message": "PPI atual: $1" },

@@ -4,6 +4,7 @@
   "openRuler": { "message": "打开独立尺子窗口" },
   "openCalibration": { "message": "进入校准模式" },
   "addOverlayRuler": { "message": "在当前页面添加尺子" },
+  "addAngleTool": { "message": "在当前页添加三点式量角器" },
   "addProtractor": { "message": "在当前页添加量角器" },
   "unsupportedPage": { "message": "当前页面受限，无法添加尺子（如浏览器设置页或应用商店）。" },
   "currentPpi": { "message": "当前 PPI: $1" },

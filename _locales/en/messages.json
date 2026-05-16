@@ -4,6 +4,7 @@
   "openRuler": { "message": "Open Independent Ruler Window" },
   "openCalibration": { "message": "Enter Calibration Mode" },
   "addOverlayRuler": { "message": "Add Ruler to Current Page" },
+  "addAngleTool": { "message": "Add 3-Point Angle Tool" },
   "addProtractor": { "message": "Add Protractor to Current Page" },
   "unsupportedPage": { "message": "The current page is restricted; cannot add a ruler (e.g., settings pages or Web Store)." },
   "currentPpi": { "message": "Current PPI: $1" },

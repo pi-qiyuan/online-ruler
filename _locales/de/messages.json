@@ -4,6 +4,7 @@
   "openRuler": { "message": "Lineal in separatem Fenster öffnen" },
   "openCalibration": { "message": "Kalibrierungsmodus öffnen" },
   "addOverlayRuler": { "message": "Lineal zur aktuellen Seite hinzufügen" },
+  "addAngleTool": { "message": "3-Punkt-Winkelwerkzeug hinzufügen" },
   "addProtractor": { "message": "Winkelmesser zur aktuellen Seite hinzufügen" },
   "unsupportedPage": { "message": "Auf dieser Seite eingeschränkt (z. B. Browsereinstellungen oder App Store)." },
   "currentPpi": { "message": "Aktuelle PPI: $1" },

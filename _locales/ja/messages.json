@@ -4,6 +4,7 @@
   "openRuler": { "message": "独立したウィンドウで開く" },
   "openCalibration": { "message": "校正（キャリブレーション）モード" },
   "addOverlayRuler": { "message": "現在のページに定規を表示" },
+  "addAngleTool": { "message": "3点式角度ツールを表示" },
   "addProtractor": { "message": "現在のページに分度器を表示" },
   "unsupportedPage": { "message": "このページでは制限により定規を表示できません（設定ページやストアなど）。" },
   "currentPpi": { "message": "現在の PPI: $1" },
@@ -48,4 +49,3 @@
   "colorLime": { "message": "ライム" },
   "colorGreen": { "message": "グリーン" }
 }
-

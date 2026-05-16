@@ -302,6 +302,114 @@
   position: fixed;
 }
 
+.online-ruler-overlay.or-angle {
+  background: transparent;
+  position: fixed;
+  display: block;
+}
+
+.online-ruler-overlay.or-angle .ruler-body {
+  position: relative;
+  overflow: visible;
+  cursor: move;
+}
+
+.online-ruler-overlay.or-angle .ruler-svg {
+  inset: 0;
+  pointer-events: none;
+}
+
+.online-ruler-overlay.or-angle .angle-sector {
+  stroke-width: 1;
+}
+
+.online-ruler-overlay.or-angle .angle-arm {
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+}
+
+.online-ruler-overlay.or-angle .angle-vertex-ring {
+  fill: transparent;
+  stroke-width: 2;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.18));
+}
+
+.online-ruler-overlay.or-angle .angle-center-dot {
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.22));
+}
+
+.online-ruler-overlay .angle-handle {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid #0f766e;
+  background: #ffffff;
+  color: #0f766e;
+  font-size: 10px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  z-index: 25;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.18);
+}
+
+.online-ruler-overlay .angle-handle:active {
+  cursor: grabbing;
+}
+
+.online-ruler-overlay .angle-handle-vertex {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  color: transparent;
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.65), 0 2px 7px rgba(0,0,0,0.18);
+}
+
+.online-ruler-overlay .angle-measure-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 58px;
+  padding: 5px 9px;
+  border-radius: 16px;
+  background: rgba(17, 24, 39, 0.82);
+  color: #ffffff;
+  font: 700 13px/1 sans-serif;
+  text-align: center;
+  pointer-events: none;
+  z-index: 24;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.online-ruler-overlay.or-angle .ruler-toolbar {
+  position: absolute;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: visible;
+  gap: 6px;
+  z-index: 30;
+}
+
+.online-ruler-overlay.or-angle .opacity-slider {
+  width: 92px;
+}
+
+.online-ruler-overlay.or-angle .color-selector {
+  width: 100px;
+}
+
+.online-ruler-overlay.or-angle .color-options-list {
+  top: 100%;
+  margin-top: 4px;
+}
+
 .online-ruler-overlay.or-protractor .ruler-body {
   border-radius: 0;
 }

@@ -66,6 +66,7 @@ async function injectOverlay(mode = 'ruler') {
 }
 
 document.getElementById('addOverlayRuler').onclick = () => injectOverlay('ruler');
+document.getElementById('addAngleTool').onclick = () => injectOverlay('angle');
 document.getElementById('addProtractor').onclick = () => injectOverlay('protractor');
 
 zSlider.onchange = () => {

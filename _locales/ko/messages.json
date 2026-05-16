@@ -4,6 +4,7 @@
   "openRuler": { "message": "별도 창으로 자 열기" },
   "openCalibration": { "message": "보정 모드 진입" },
   "addOverlayRuler": { "message": "현재 페이지에 자 추가" },
+  "addAngleTool": { "message": "3점 각도 측정 도구 추가" },
   "addProtractor": { "message": "현재 페이지에 각도기 추가" },
   "unsupportedPage": { "message": "이 페이지에서는 자를 사용할 수 없습니다 (브라우저 설정 또는 앱스토어 등)." },
   "currentPpi": { "message": "현재 PPI: $1" },
