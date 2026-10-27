@@ -47,5 +47,13 @@
   "colorPink": { "message": "Rosa" },
   "colorOrange": { "message": "Naranja" },
   "colorLime": { "message": "Lima" },
-  "colorGreen": { "message": "Verde" }
+  "colorGreen": { "message": "Verde" },
+  "rulerKeyboardLabel": { "message": "Regla en línea" },
+  "rulerKeyboardHint": { "message": "Flechas: mover 1 px · Shift + flechas: 10 px" },
+  "rulerKeyboardIntro": { "message": "Haz clic en la regla y usa las flechas para moverla." },
+  "rulerKeyboardIntroMultiple": { "message": "Haz clic en la regla y usa las flechas para moverla. Pulsa Tab para seleccionar la siguiente regla." },
+  "keyboardHelpTitle": { "message": "Controles de teclado para reglas en la página" },
+  "keyboardHelpFocus": { "message": "Haz clic en una regla de la página para enfocarla." },
+  "keyboardHelpMove": { "message": "Las flechas la mueven 1 px; Shift + flechas, 10 px." },
+  "keyboardHelpTab": { "message": "Con una regla enfocada, usa Tab / Shift + Tab para cambiar de regla." }
 }

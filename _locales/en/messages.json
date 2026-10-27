@@ -47,5 +47,13 @@
   "colorPink": { "message": "Pink" },
   "colorOrange": { "message": "Orange" },
   "colorLime": { "message": "Lime" },
-  "colorGreen": { "message": "Green" }
+  "colorGreen": { "message": "Green" },
+  "rulerKeyboardLabel": { "message": "Online ruler" },
+  "rulerKeyboardHint": { "message": "Arrow keys: move 1 px · Shift + arrows: 10 px" },
+  "rulerKeyboardIntro": { "message": "Click the ruler, then use the arrow keys to move it." },
+  "rulerKeyboardIntroMultiple": { "message": "Click the ruler, then use the arrow keys to move it. Press Tab to select the next ruler." },
+  "keyboardHelpTitle": { "message": "Keyboard controls for page rulers" },
+  "keyboardHelpFocus": { "message": "Click a ruler on the page to focus it." },
+  "keyboardHelpMove": { "message": "Arrow keys move it 1 px; Shift + arrows move it 10 px." },
+  "keyboardHelpTab": { "message": "With a ruler focused, use Tab / Shift + Tab to switch rulers." }
 }

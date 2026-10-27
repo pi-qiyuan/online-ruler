@@ -31,7 +31,7 @@ var MeasurementEngine = {
    * Draw a standard ruler
    */
   drawRuler: function(svg, options) {
-    const { width, height, isVertical, unit, physicalPpi, zeroOffset, material = 'WOOD', color } = options;
+    const { width, height, isVertical, unit, physicalPpi, zeroOffset, material = 'WOOD', color, tickSide = 'top' } = options;
     if (width === 0 || height === 0) return;
 
     const ns = "http://www.w3.org/2000/svg";
@@ -76,11 +76,21 @@ var MeasurementEngine = {
         const lineH = (i % 10 === 0) ? 25 : (i % 5 === 0 ? 18 : 10);
         const line = document.createElementNS(ns, "line");
         if (!isVertical) {
-          line.setAttribute("x1", pos); line.setAttribute("y1", 0);
-          line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
+          if (tickSide === 'bottom') {
+            line.setAttribute("x1", pos); line.setAttribute("y1", height);
+            line.setAttribute("x2", pos); line.setAttribute("y2", height - lineH);
+          } else {
+            line.setAttribute("x1", pos); line.setAttribute("y1", 0);
+            line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
+          }
         } else {
-          line.setAttribute("x1", 0); line.setAttribute("y1", pos);
-          line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
+          if (tickSide === 'bottom') {
+            line.setAttribute("x1", width); line.setAttribute("y1", pos);
+            line.setAttribute("x2", width - lineH); line.setAttribute("y2", pos);
+          } else {
+            line.setAttribute("x1", 0); line.setAttribute("y1", pos);
+            line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
+          }
         }
         line.setAttribute("stroke", "black");
         line.setAttribute("stroke-width", "1");
@@ -88,8 +98,13 @@ var MeasurementEngine = {
 
         if (i % 10 === 0) {
           const text = document.createElementNS(ns, "text");
-          if (!isVertical) { text.setAttribute("x", pos + 2); text.setAttribute("y", 35); }
-          else { text.setAttribute("x", 28); text.setAttribute("y", pos + 5); }
+          if (!isVertical) {
+            text.setAttribute("x", pos + 2);
+            text.setAttribute("y", tickSide === 'bottom' ? height - 35 : 35);
+          } else {
+            text.setAttribute("x", tickSide === 'bottom' ? width - 28 : 28);
+            text.setAttribute("y", pos + 5);
+          }
           text.setAttribute("font-size", "10");
           text.setAttribute("font-family", "sans-serif");
           text.textContent = i / 10;
@@ -107,11 +122,21 @@ var MeasurementEngine = {
         const lineH = (i % 16 === 0) ? 25 : (i % 8 === 0 ? 18 : (i % 4 === 0 ? 14 : (i % 2 === 0 ? 11 : 8)));
         const line = document.createElementNS(ns, "line");
         if (!isVertical) {
-          line.setAttribute("x1", pos); line.setAttribute("y1", 0);
-          line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
+          if (tickSide === 'bottom') {
+            line.setAttribute("x1", pos); line.setAttribute("y1", height);
+            line.setAttribute("x2", pos); line.setAttribute("y2", height - lineH);
+          } else {
+            line.setAttribute("x1", pos); line.setAttribute("y1", 0);
+            line.setAttribute("x2", pos); line.setAttribute("y2", lineH);
+          }
         } else {
-          line.setAttribute("x1", 0); line.setAttribute("y1", pos);
-          line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
+          if (tickSide === 'bottom') {
+            line.setAttribute("x1", width); line.setAttribute("y1", pos);
+            line.setAttribute("x2", width - lineH); line.setAttribute("y2", pos);
+          } else {
+            line.setAttribute("x1", 0); line.setAttribute("y1", pos);
+            line.setAttribute("x2", lineH); line.setAttribute("y2", pos);
+          }
         }
         line.setAttribute("stroke", "black");
         line.setAttribute("stroke-width", "1");
@@ -119,8 +144,13 @@ var MeasurementEngine = {
 
         if (i % 16 === 0) {
           const text = document.createElementNS(ns, "text");
-          if (!isVertical) { text.setAttribute("x", pos + 2); text.setAttribute("y", 35); }
-          else { text.setAttribute("x", 28); text.setAttribute("y", pos + 5); }
+          if (!isVertical) {
+            text.setAttribute("x", pos + 2);
+            text.setAttribute("y", tickSide === 'bottom' ? height - 35 : 35);
+          } else {
+            text.setAttribute("x", tickSide === 'bottom' ? width - 28 : 28);
+            text.setAttribute("y", pos + 5);
+          }
           text.setAttribute("font-size", "10");
           text.setAttribute("font-family", "sans-serif");
           text.textContent = i / 16;

@@ -9,8 +9,18 @@
 
       this.container = document.createElement('div');
       this.container.className = 'online-ruler-overlay';
+      this.container.tabIndex = -1;
+      this.container.setAttribute('role', 'group');
+      this.container.setAttribute('aria-label', chrome.i18n.getMessage('rulerKeyboardLabel') || 'Online ruler');
       this.container.style.left = (100 + offset) + 'px';
       this.container.style.top = (100 + offset) + 'px';
+
+      this.keyboardHint = document.createElement('div');
+      this.keyboardHint.className = 'keyboard-hint';
+      this.keyboardHintFocusText = chrome.i18n.getMessage('rulerKeyboardHint') || 'Arrow keys: move 1 px · Shift + arrows: 10 px';
+      this.keyboardIntroText = chrome.i18n.getMessage('rulerKeyboardIntro') || 'Click the ruler, then use the arrow keys to move it.';
+      this.keyboardIntroMultipleText = chrome.i18n.getMessage('rulerKeyboardIntroMultiple') || 'Click the ruler, then use the arrow keys to move it. Press Tab to select the next ruler.';
+      this.keyboardHint.textContent = this.keyboardHintFocusText;
 
       this.rulerBody = document.createElement('div');
       this.rulerBody.className = 'ruler-body';
@@ -34,7 +44,7 @@
       this.toolbar.className = 'ruler-toolbar';
 
       this.rulerBody.append(this.svg, this.resizeHandle, this.rotateHandle, this.angleBadge);
-      this.container.append(this.rulerBody, this.toolbar);
+      this.container.append(this.rulerBody, this.toolbar, this.keyboardHint);
 
       this.angleHandles = {};
       [

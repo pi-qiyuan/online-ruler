@@ -40,14 +40,15 @@ SharedLogic.UI.setupColorSelector(customColorSelectorContainer, {
 function updateDisplay() {
   const container = document.getElementById('rulerContainer');
   MeasurementEngine.drawRuler(svg, {
-    width: container.clientWidth,
-    height: container.clientHeight,
+    width: isVertical ? 60 : container.clientWidth,
+    height: isVertical ? container.clientHeight : 60,
     isVertical,
     unit: state.unit,
     physicalPpi: state.ppi,
     zeroOffset: state.zeroOffset,
     material: state.material,
-    color: state.material === 'PLASTIC' ? SharedLogic.COLORS[currentColorIdx].val : null
+    color: state.material === 'PLASTIC' ? SharedLogic.COLORS[currentColorIdx].val : null,
+    tickSide: 'bottom'
   });
   customColorSelectorContainer.style.display = state.material === 'PLASTIC' ? 'block' : 'none';
 }
@@ -64,7 +65,7 @@ SharedLogic.bindState(state, (init) => {
     }
   }
   updateDisplay();
-});
+}, ['ppi', 'zeroOffset']);
 
 function updateCalibrationBox() {
   const selected = document.getElementById('refObject').selectedOptions[0];
@@ -104,6 +105,8 @@ document.getElementById('settingsBtn').onclick = () => {
 };
 
 unitSelect.onchange = (e) => {
+  state.unit = e.target.value;
+  updateDisplay();
   chrome.storage.local.set({ unit: e.target.value });
   SharedLogic.Milestones.updateStats('unitSwitches');
 };

@@ -8,22 +8,17 @@ Do you often struggle to obtain accurate measurements when sizing objects on you
 
 Whether you are a designer, an engineer, or simply a user who needs to measure small objects on your screen, this extension offers you the most intuitive and reliable digital measurement solution available.
 
-## 🎉 v2.1.0 MAJOR UPDATE: THREE-POINT DYNAMIC PROTRACTOR
+## 🎉 v2.2.0 Update: Keyboard Controls and Pixel-Perfect Fine-Tuning for Web Rulers
 
-This update introduces a powerful new way to measure angles directly on webpages, designed for perfect alignment with design elements:
+This update enhances the precision and ease of use for web rulers. We’ve introduced a full suite of keyboard controls, enabling pixel-perfect alignment and efficient navigation between multiple rulers:
 
-* ✨ **Three-Point Dynamic Protractor**: Adds a measurement tool consisting of a vertex and two endpoints. Quickly align with any angle by positioning the three points.
+* ✨ **Pixel-Perfect Keyboard Adjustments**: Once a web ruler is in focus, use the arrow keys (↑ / ↓ / ← / →) to nudge it by 1 pixel. Hold the Shift key while using the arrow keys to move it in 10-pixel increments—perfect for both precise measurements and rapid positioning.
 
-* ✨ **Real-time Angle Calculation**: Automatically calculates and displays the angle between the two arms in degrees (°), supporting 0°-360° measurements as you drag the endpoints.
+* ✨ **Quick-Focus via Click**: Simply click any ruler on the webpage to bring it into focus. You’ll see intuitive on-screen guidance, making it easy to start moving the ruler with your keyboard immediately.
 
-* ✨ **Dynamic Measurement Arms**: The two arms can be extended indefinitely by dragging the endpoints, making it easy to align with large webpage elements, image edges, or slanted design lines.
+* ✨ **Seamless Switching with the Tab Key**: If you have multiple rulers on the page, you can easily cycle the focus between them by pressing the Tab or Shift + Tab keys—streamlining the process of comparing measurements across different rulers.
 
-* ✨ **Semi-transparent Sector Area**: A semi-transparent sector automatically appears between the two arms to visualize the measured area. The transparency of this sector can be adjusted independently.
-
-* ✨ **Independent Arm Snapping**: Each arm automatically snaps to 45° increments (0°, 45°, 90°, etc.) when moved close, facilitating quick alignment with horizontal, vertical, and common diagonal edges.
-
-* ✨ **Precision Alignment**: Supports multiple color schemes. The vertex features a transparent hollow circle with a clear center point for pinpoint accuracy.
-
+* ✨ **Intuitive Keyboard Guidance**: Built-in prompts (e.g., "Arrow keys to move 1px," "Shift + Arrow keys to move 10px") and helpful tooltips ensure you can get started right away without needing to memorize complex shortcuts.
 
 ## 🎒 STUDENT'S CORNER: FUN WITH GEOMETRY (Great for 4th Graders!)
 
@@ -47,6 +42,10 @@ Hey there, young explorers! Are you learning about shapes and angles in school? 
     - Standard Protractor: A semi-transparent 360° rotatable protractor based on PPI calibration for true physical size.
     - Three-point Dynamic Protractor: Measures arbitrary angles via a vertex and two endpoints with real-time display, adjustable arms, and sector visualization.
 
+* ⌨️ **Keyboard Controls for Pixel-Perfect Adjustment and Focus Switching**:
+    - Precise Positioning: Once a web ruler is selected, you can use the arrow keys to nudge its position in 1-pixel increments. Hold down the Shift key while using the arrow keys to move it in 10-pixel increments—eliminating the instability often caused by mouse dragging. 
+    - Switching Between Multiple Rulers: When multiple rulers are present, you can cycle through them by pressing the Tab key (or Shift + Tab) once a ruler has gained focus.
+
 * 📏 **Dual Measurement Modes**:
     - Standalone Window Mode: Opens a clean, "always-on-top" ruler window.
     - Page Overlay Mode: Displays floating rulers or protractors directly over any webpage with adjustable transparency.
@@ -66,6 +65,7 @@ Hey there, young explorers! Are you learning about shapes and angles in school? 
 
 * 🔄 **Flexible Interaction Logic**:
     - Full-Edge Resizing: Drag any point along the end of the ruler to adjust its length.
+    - Precise Collaboration: Seamless integration of mouse dragging and keyboard arrow keys for pixel-level fine-tuning.
     - Real-time Synchronization: Changes to materials, colors, or settings are applied instantly.
 
 * 💾 **Privacy & Local Storage**:
@@ -79,7 +79,11 @@ Hey there, young explorers! Are you learning about shapes and angles in school? 
 1. First-time Use: Click the extension icon to enter "Calibration Mode."
 2. Alignment Calibration: Select a physical reference object (e.g., a credit card). Place the actual object directly against your screen, then adjust the slider (or click the +/- buttons) until the red on-screen frame aligns perfectly with the physical object.
 3. Start Measuring: Click "Open in New Window" or "Add Ruler to Current Page" to begin using the tool.
-4. Adjusting the Zero Point: If the starting edge of the object you wish to measure is obstructed, simply adjust the "Zero-point Offset" slider within the Popup menu.
+4. Change Style: Use the toolbar icons to adjust materials, colors, or transparency.
+5. Adjusting Position and Angle:
+   - Drag the main body to reposition it. Once a ruler is selected (in focus), you can perform precise, pixel-level adjustments using the arrow keys (1 pixel) or by holding Shift while using the arrow keys (10 pixels). 
+   - Drag the rotation handle to adjust the angle of a ruler or standard protractor; for a three-point protractor, drag its vertex or endpoints to align with the angle.
+6. Keyboard Shortcuts and Switching Between Multiple Rulers: When multiple rulers are added to the page, you can cycle through them by pressing the Tab or Shift + Tab keys once a ruler is in focus.
 
 ## 🎨 Design Philosophy
 

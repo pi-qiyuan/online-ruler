@@ -37,6 +37,33 @@ button:hover {
   background: #0056b3;
 }
 
+.keyboard-help {
+  margin: -5px 0 16px;
+  padding: 10px 12px;
+  border: 1px solid #d8e8fb;
+  border-radius: 6px;
+  background: #f0f7ff;
+  color: #425466;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.keyboard-help-title {
+  margin-bottom: 4px;
+  color: #245b91;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.keyboard-help ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.keyboard-help li + li {
+  margin-top: 2px;
+}
+
 .settings-group {
   border-top: 1px solid #eee;
   padding-top: 15px;

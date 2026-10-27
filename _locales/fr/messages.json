@@ -47,5 +47,13 @@
   "colorPink": { "message": "Rose" },
   "colorOrange": { "message": "Orange" },
   "colorLime": { "message": "Citron vert" },
-  "colorGreen": { "message": "Vert" }
+  "colorGreen": { "message": "Vert" },
+  "rulerKeyboardLabel": { "message": "Règle en ligne" },
+  "rulerKeyboardHint": { "message": "Flèches : déplacer de 1 px · Maj + flèches : 10 px" },
+  "rulerKeyboardIntro": { "message": "Cliquez sur la règle, puis utilisez les flèches pour la déplacer." },
+  "rulerKeyboardIntroMultiple": { "message": "Cliquez sur la règle, puis utilisez les flèches pour la déplacer. Appuyez sur Tab pour sélectionner la règle suivante." },
+  "keyboardHelpTitle": { "message": "Commandes clavier des règles sur la page" },
+  "keyboardHelpFocus": { "message": "Cliquez sur une règle de la page pour lui donner le focus." },
+  "keyboardHelpMove": { "message": "Les flèches la déplacent de 1 px ; Maj + flèches, de 10 px." },
+  "keyboardHelpTab": { "message": "Avec une règle sélectionnée, utilisez Tab / Maj + Tab pour passer aux autres." }
 }

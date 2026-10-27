@@ -15,7 +15,9 @@ SharedLogic.CONSTANTS = {
     fr: { width: 23.25, height: 23.25 },
     ja: { width: 22.6, height: 22.6 },
     ko: { width: 26.5, height: 26.5 },
-    zh: { width: 22.25, height: 22.25 }
+    zh: { width: 22.25, height: 22.25 },
+    pt: { width: 25, height: 25 },
+    ru: { width: 25, height: 25 }
   },
   get MATERIAL_DETAILS() {
     return {

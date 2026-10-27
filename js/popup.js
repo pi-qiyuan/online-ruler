@@ -43,6 +43,7 @@ async function injectOverlay(mode = 'ruler') {
         target: { tabId: tab.id },
         func: (nextMode) => {
           window.__onlineRulerNextMode = nextMode;
+          window.__onlineRulerShowKeyboardIntro = nextMode === 'ruler';
         },
         args: [mode]
       });

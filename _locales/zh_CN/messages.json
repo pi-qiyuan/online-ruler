@@ -1,5 +1,5 @@
 {
-  "extensionName": { "message": "在线尺子 (Online Ruler)" },
+  "extensionName": { "message": "在线尺子" },
   "extensionDescription": { "message": "1:1 精确屏幕尺子，支持物理校准，提供厘米与英寸测量。" },
   "openRuler": { "message": "打开独立尺子窗口" },
   "openCalibration": { "message": "进入校准模式" },
@@ -47,5 +47,13 @@
   "colorPink": { "message": "粉色" },
   "colorOrange": { "message": "橙色" },
   "colorLime": { "message": "青柠" },
-  "colorGreen": { "message": "绿色" }
+  "colorGreen": { "message": "绿色" },
+  "rulerKeyboardLabel": { "message": "在线尺子" },
+  "rulerKeyboardHint": { "message": "方向键移动 1 像素 · Shift + 方向键移动 10 像素" },
+  "rulerKeyboardIntro": { "message": "点击尺子后，可以使用方向键移动尺子。" },
+  "rulerKeyboardIntroMultiple": { "message": "点击尺子后，可以使用方向键移动尺子。按 Tab 可切换到下一把尺子。" },
+  "keyboardHelpTitle": { "message": "网页尺子的键盘操作" },
+  "keyboardHelpFocus": { "message": "点击网页上的尺子，使其获得焦点。" },
+  "keyboardHelpMove": { "message": "方向键移动 1 像素；Shift + 方向键移动 10 像素。" },
+  "keyboardHelpTab": { "message": "尺子获得焦点后，按 Tab / Shift + Tab 切换尺子。" }
 }

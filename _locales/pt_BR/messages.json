@@ -23,7 +23,7 @@
   "step2": { "message": "2. Alinhe o objeto físico com a caixa vermelha ajustando o controle deslizante:" },
   "refCard": { "message": "Cartão de crédito (85,6 mm)" },
   "refA4": { "message": "Largura da folha A4 (210 mm)" },
-  "refCoin": { "message": "Moeda de 25 centavos de dólar (24,26 mm)" },
+  "refCoin": { "message": "Moeda brasileira de 25 centavos (25 mm)" },
   "saveAndStart": { "message": "Salvar e começar a medir" },
   "cancel": { "message": "Cancelar" },
   "zeroOffsetLabel": { "message": "Deslocamento zero da régua (mm): " },
@@ -47,5 +47,13 @@
   "colorPink": { "message": "Rosa" },
   "colorOrange": { "message": "Laranja" },
   "colorLime": { "message": "Lima" },
-  "colorGreen": { "message": "Verde" }
+  "colorGreen": { "message": "Verde" },
+  "rulerKeyboardLabel": { "message": "Régua online" },
+  "rulerKeyboardHint": { "message": "Setas: mover 1 px · Shift + setas: 10 px" },
+  "rulerKeyboardIntro": { "message": "Clique na régua e use as setas para movê-la." },
+  "rulerKeyboardIntroMultiple": { "message": "Clique na régua e use as setas para movê-la. Pressione Tab para selecionar a próxima régua." },
+  "keyboardHelpTitle": { "message": "Atalhos de teclado para réguas na página" },
+  "keyboardHelpFocus": { "message": "Clique em uma régua na página para dar foco a ela." },
+  "keyboardHelpMove": { "message": "As setas movem 1 px; Shift + setas movem 10 px." },
+  "keyboardHelpTab": { "message": "Com uma régua em foco, use Tab / Shift + Tab para alternar entre réguas." }
 }

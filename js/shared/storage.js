@@ -12,7 +12,7 @@ SharedLogic.getLocalizedCoinReference = function() {
   return SharedLogic.CONSTANTS.COIN_REFERENCES[language] || SharedLogic.CONSTANTS.COIN_REFERENCES.default;
 };
 
-SharedLogic.bindState = function(state, callback) {
+SharedLogic.bindState = function(state, callback, syncKeys) {
   chrome.storage.local.get(['ppi', 'unit', 'zeroOffset', 'physicalPpi', 'angle', 'material'], (result) => {
     state.ppi = SharedLogic.getPhysicalPpi(result);
     state.unit = result.unit || 'cm';
@@ -26,23 +26,27 @@ SharedLogic.bindState = function(state, callback) {
     if (area !== 'local') return;
 
     let changed = false;
-    if (changes.ppi || changes.physicalPpi) {
-      state.ppi = (changes.physicalPpi || changes.ppi).newValue;
-      changed = true;
+    const shouldSync = (key) => !syncKeys || syncKeys.includes(key);
+
+    if (shouldSync('ppi') || shouldSync('physicalPpi')) {
+      if (changes.ppi || changes.physicalPpi) {
+        state.ppi = (changes.physicalPpi || changes.ppi).newValue;
+        changed = true;
+      }
     }
-    if (changes.unit) {
+    if (shouldSync('unit') && changes.unit) {
       state.unit = changes.unit.newValue;
       changed = true;
     }
-    if (changes.zeroOffset !== undefined) {
+    if (shouldSync('zeroOffset') && changes.zeroOffset !== undefined) {
       state.zeroOffset = changes.zeroOffset.newValue;
       changed = true;
     }
-    if (changes.angle !== undefined) {
+    if (shouldSync('angle') && changes.angle !== undefined) {
       state.angle = changes.angle.newValue;
       changed = true;
     }
-    if (changes.material) {
+    if (shouldSync('material') && changes.material) {
       state.material = changes.material.newValue;
       changed = true;
     }

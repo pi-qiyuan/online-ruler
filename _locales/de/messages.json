@@ -47,5 +47,13 @@
   "colorPink": { "message": "Rosa" },
   "colorOrange": { "message": "Orange" },
   "colorLime": { "message": "Limette" },
-  "colorGreen": { "message": "Grün" }
+  "colorGreen": { "message": "Grün" },
+  "rulerKeyboardLabel": { "message": "Online-Lineal" },
+  "rulerKeyboardHint": { "message": "Pfeiltasten: 1 px · Umschalt + Pfeiltasten: 10 px" },
+  "rulerKeyboardIntro": { "message": "Klicke auf das Lineal und verschiebe es mit den Pfeiltasten." },
+  "rulerKeyboardIntroMultiple": { "message": "Klicke auf das Lineal und verschiebe es mit den Pfeiltasten. Drücke Tab, um das nächste Lineal auszuwählen." },
+  "keyboardHelpTitle": { "message": "Tastatursteuerung für Lineale auf der Seite" },
+  "keyboardHelpFocus": { "message": "Klicke auf ein Lineal auf der Seite, um es zu fokussieren." },
+  "keyboardHelpMove": { "message": "Pfeiltasten bewegen es um 1 px; Umschalt + Pfeiltasten um 10 px." },
+  "keyboardHelpTab": { "message": "Wenn ein Lineal fokussiert ist, mit Tab / Umschalt + Tab wechseln." }
 }

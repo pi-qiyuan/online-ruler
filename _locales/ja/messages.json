@@ -1,5 +1,5 @@
 {
-  "extensionName": { "message": "オンライン定規 (Online Ruler)" },
+  "extensionName": { "message": "オンライン定規" },
   "extensionDescription": { "message": "1:1 精密スクリーン定規。物理キャリブレーション対応で、センチとインチを計測可能。" },
   "openRuler": { "message": "独立したウィンドウで開く" },
   "openCalibration": { "message": "校正（キャリブレーション）モード" },
@@ -47,5 +47,13 @@
   "colorPink": { "message": "ピンク" },
   "colorOrange": { "message": "オレンジ" },
   "colorLime": { "message": "ライム" },
-  "colorGreen": { "message": "グリーン" }
+  "colorGreen": { "message": "グリーン" },
+  "rulerKeyboardLabel": { "message": "オンライン定規" },
+  "rulerKeyboardHint": { "message": "矢印キー：1 px 移動 · Shift + 矢印キー：10 px 移動" },
+  "rulerKeyboardIntro": { "message": "定規をクリックすると、矢印キーで移動できます。" },
+  "rulerKeyboardIntroMultiple": { "message": "定規をクリックすると、矢印キーで移動できます。Tab キーで次の定規に切り替えます。" },
+  "keyboardHelpTitle": { "message": "ページ上の定規のキーボード操作" },
+  "keyboardHelpFocus": { "message": "ページ上の定規をクリックしてフォーカスします。" },
+  "keyboardHelpMove": { "message": "矢印キーで 1 px、Shift + 矢印キーで 10 px 移動します。" },
+  "keyboardHelpTab": { "message": "定規にフォーカス中は、Tab / Shift + Tab で定規を切り替えます。" }
 }

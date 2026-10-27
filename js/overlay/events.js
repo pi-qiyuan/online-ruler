@@ -2,7 +2,85 @@
   const OnlineRulerInstance = window.OnlineRulerOverlay && window.OnlineRulerOverlay.OnlineRulerInstance;
   if (!OnlineRulerInstance) return;
 
+  OnlineRulerInstance.prototype.showKeyboardHint = function(message, duration) {
+    this.keyboardHint.textContent = message;
+
+    // Centered text can land between device pixels, especially when the message
+    // width is fractional. Snap its viewport position without changing ruler motion.
+    this.keyboardHint.style.setProperty('--keyboard-hint-snap-x', '0px');
+    this.keyboardHint.style.setProperty('--keyboard-hint-snap-y', '0px');
+    const rect = this.keyboardHint.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const viewportDx = Math.round(rect.left * dpr) / dpr - rect.left;
+    const viewportDy = Math.round(rect.top * dpr) / dpr - rect.top;
+    const transform = getComputedStyle(this.container).transform;
+    const matrix = transform === 'none' ? new DOMMatrix() : new DOMMatrix(transform);
+    const determinant = matrix.a * matrix.d - matrix.b * matrix.c;
+    const localDx = (matrix.d * viewportDx - matrix.c * viewportDy) / determinant;
+    const localDy = (-matrix.b * viewportDx + matrix.a * viewportDy) / determinant;
+    this.keyboardHint.style.setProperty('--keyboard-hint-snap-x', `${localDx}px`);
+    this.keyboardHint.style.setProperty('--keyboard-hint-snap-y', `${localDy}px`);
+
+    this.keyboardHint.classList.add('visible');
+    clearTimeout(this.keyboardHintTimeout);
+    this.keyboardHintTimeout = setTimeout(() => {
+      this.keyboardHint.classList.remove('visible');
+      this.keyboardHint.textContent = this.keyboardHintFocusText;
+    }, duration);
+  };
+
   OnlineRulerInstance.prototype.initEvents = function() {
+    this.container.addEventListener('focus', () => {
+      this.container.classList.add('keyboard-focused');
+      this.showKeyboardHint(this.keyboardHintFocusText, 2800);
+    });
+
+    this.container.addEventListener('blur', () => {
+      this.container.classList.remove('keyboard-focused');
+      this.keyboardHint.classList.remove('visible');
+      clearTimeout(this.keyboardHintTimeout);
+    });
+
+    this.container.addEventListener('keydown', (e) => {
+      // Only handle keys while the ruler container itself owns focus. Form controls
+      // inside its toolbar retain their normal keyboard behavior.
+      if (document.activeElement !== this.container) return;
+
+      if (e.key === 'Tab') {
+        const rulers = Array.from(document.querySelectorAll('.online-ruler-overlay'));
+        if (rulers.length < 2) return;
+        const currentIndex = rulers.indexOf(this.container);
+        const direction = e.shiftKey ? -1 : 1;
+        const next = rulers[(currentIndex + direction + rulers.length) % rulers.length];
+        e.preventDefault();
+        e.stopPropagation();
+        next.focus({ preventScroll: true });
+        return;
+      }
+
+      const movement = {
+        ArrowLeft: [-1, 0],
+        ArrowRight: [1, 0],
+        ArrowUp: [0, -1],
+        ArrowDown: [0, 1]
+      }[e.key];
+      if (!movement) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      const step = e.shiftKey ? 10 : 1;
+      const left = parseFloat(this.container.style.left) || 0;
+      const top = parseFloat(this.container.style.top) || 0;
+      this.container.style.left = (left + movement[0] * step) + 'px';
+      this.container.style.top = (top + movement[1] * step) + 'px';
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (!this.container.contains(e.target) && document.activeElement === this.container) {
+        this.container.blur();
+      }
+    });
+
     this.modeToggleBtn.onclick = () => {
       this.state.mode = this.state.mode === 'ruler' ? 'protractor' : 'ruler';
       this.updateLayout();
@@ -15,7 +93,11 @@
       }
     });
 
-    this.unitSelect.onchange = (e) => chrome.storage.local.set({ unit: e.target.value });
+    this.unitSelect.onchange = (e) => {
+      this.state.unit = e.target.value;
+      this.updateRulerContent();
+      chrome.storage.local.set({ unit: e.target.value });
+    };
     this.materialSelect.onchange = (e) => {
       this.state.material = e.target.value;
       this.updateLayout();
@@ -29,6 +111,7 @@
       this.container.style.zIndex = window.OnlineRulerInstance.maxZIndex;
 
       if (e.target.closest('select, input, button, .color-selector')) return;
+      this.container.focus({ preventScroll: true });
       sX = e.clientX;
       sY = e.clientY;
 
@@ -37,8 +120,14 @@
         this.activeAnglePoint = e.target.closest('.angle-handle').dataset.point;
       } else if (e.target === this.rotateHandle) {
         this.dragMode = 'rotate';
-        this.pivotX = parseInt(this.container.style.left) || 0;
-        this.pivotY = parseInt(this.container.style.top) || 0;
+        
+        const style = window.getComputedStyle(this.container);
+        const origin = style.transformOrigin.split(' ');
+        const ox = parseFloat(origin[0]) || 0;
+        const oy = parseFloat(origin[1]) || 0;
+
+        this.pivotX = (parseInt(this.container.style.left) || 0) + ox;
+        this.pivotY = (parseInt(this.container.style.top) || 0) + oy;
 
         const startMouseAngle = Math.atan2(e.clientY - this.pivotY, e.clientX - this.pivotX) * 180 / Math.PI;
         this.startRotationOffset = this.state.angle - startMouseAngle;

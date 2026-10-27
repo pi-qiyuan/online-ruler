@@ -6,6 +6,8 @@
     constructor() {
       const initialMode = window.__onlineRulerNextMode || 'ruler';
       delete window.__onlineRulerNextMode;
+      this.showKeyboardIntro = Boolean(window.__onlineRulerShowKeyboardIntro);
+      delete window.__onlineRulerShowKeyboardIntro;
 
       this.state = { ppi: 96, unit: 'cm', zeroOffset: 0, angle: 0, material: 'WOOD', mode: initialMode };
       this.isVertical = false;
@@ -33,6 +35,11 @@
 
       document.body.appendChild(this.container);
       this.updateLayout();
+      if (this.showKeyboardIntro) {
+        const hasMultipleRulers = document.querySelectorAll('.online-ruler-overlay').length > 1;
+        const intro = hasMultipleRulers ? this.keyboardIntroMultipleText : this.keyboardIntroText;
+        this.showKeyboardHint(intro, 5000);
+      }
     }
 
     loadInitialState() {
@@ -51,7 +58,7 @@
         }
         this.updateRulerContent();
         this.updateRulerTransform();
-      });
+      }, ['ppi', 'zeroOffset']);
     }
 
     updateRulerContent() {
@@ -67,6 +74,7 @@
         this.rulerBody.style.width = svgW + 'px';
         this.rulerBody.style.height = svgH + 'px';
         this.container.style.width = svgW + 'px';
+        this.container.style.height = svgH + 'px';
       } else {
         MeasurementEngine.drawRuler(this.svg, {
           width: this.isVertical ? 60 : this.hW,
@@ -82,6 +90,17 @@
     }
 
     updateRulerTransform() {
+      if (this.state.mode === 'protractor') {
+        const ppi = this.state.ppi;
+        const pxPerMm = ppi / 25.4;
+        const baseWidth = 6 * ppi;
+        const outerR = baseWidth / 2;
+        const bottomBarBottomOffset = pxPerMm + (18 * pxPerMm / 4);
+        const totalH = outerR + bottomBarBottomOffset;
+        this.container.style.transformOrigin = `50% ${(outerR / totalH) * 100}%`;
+      } else {
+        this.container.style.transformOrigin = '0 0';
+      }
       this.container.style.transform = `rotate(${this.state.angle}deg)`;
       this.angleBadge.innerText = `${parseFloat(this.state.angle).toFixed(1)}°`;
     }
